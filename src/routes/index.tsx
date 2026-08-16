@@ -20,11 +20,107 @@ import {
   WalletCards,
   Waves,
 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import type { FormEvent } from 'react'
 
 export const Route = createFileRoute('/')({
-  component: SafariTripPage,
+  component: ProtectedSafariTripPage,
 })
+
+function SafariPasswordGate({ onUnlock }: { onUnlock: () => void }) {
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault()
+
+    if (password === 'Karman') {
+      sessionStorage.setItem('safariAccess', 'granted')
+      onUnlock()
+    } else {
+      setError('Incorrect password. Please try again.')
+      setPassword('')
+    }
+  }
+
+  return (
+    <main className="password-gate">
+      <div className="password-background">
+        <img
+          src="/assets/photos/taita-elephants.webp"
+          alt="Elephants in Taita Hills"
+        />
+      </div>
+
+      <div className="password-overlay" />
+
+      <div className="password-content">
+        <p className="password-location">
+          Taita Hills Wildlife Sanctuary · Kenya
+        </p>
+
+        <h1>
+          50 Kachoris
+          <br />
+          <em>in the wild</em>
+        </h1>
+
+        <p className="password-tagline">
+          Let the good times roar
+        </p>
+
+        <div className="password-card">
+          <p className="eyebrow">Safari access</p>
+
+          <h2>Welcome to the wild</h2>
+
+          <p>
+            Enter the safari password to access the itinerary,
+            accommodation, payments and trip details.
+          </p>
+
+          <form onSubmit={handleSubmit}>
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => {
+                setPassword(event.target.value)
+                setError('')
+              }}
+              placeholder="Enter safari password"
+              aria-label="Safari password"
+              autoComplete="current-password"
+            />
+
+            <button type="submit">
+              Enter Safari
+            </button>
+          </form>
+
+          {error && (
+            <p className="password-error">{error}</p>
+          )}
+        </div>
+
+        <div className="password-thumbnails">
+          <img
+            src="/assets/photos/taita-giraffe.webp"
+            alt="Giraffe in Taita Hills"
+          />
+          <img
+            src="/assets/photos/taita-savanna.webp"
+            alt="Taita Hills savanna"
+          />
+          <img
+            src="/assets/photos/salt-lick-lodge.webp"
+            alt="Salt Lick Safari Lodge"
+          />
+        </div>
+      </div>
+    </main>
+  )
+}
+
 
 type Guest = {
   name: string
@@ -107,6 +203,25 @@ const money = (amount: number, currency: 'USD' | 'KSH') => {
   }).format(amount)
 
   return currency === 'USD' ? `$${formattedAmount}` : `KSh ${formattedAmount}`
+}
+
+function ProtectedSafariTripPage() {
+  const [hasAccess, setHasAccess] = useState(false)
+
+  useEffect(() => {
+    if (
+      typeof window !== 'undefined' &&
+      sessionStorage.getItem('safariAccess') === 'granted'
+    ) {
+      setHasAccess(true)
+    }
+  }, [])
+
+  if (!hasAccess) {
+    return <SafariPasswordGate onUnlock={() => setHasAccess(true)} />
+  }
+
+  return <SafariTripPage />
 }
 
 function SafariTripPage() {
