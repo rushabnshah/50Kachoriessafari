@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import {
   BedDouble,
   Binoculars,
+  Briefcase,
   CalendarDays,
   Check,
   ChevronDown,
@@ -67,7 +68,7 @@ const guests: Guest[] = [
   { name: 'Aaron', residency: 'Non-resident', roomType: 'Twin', room: 12, usd: 330, ksh: 42900, paidUsd: 0 },
   { name: 'Rohin', residency: 'Non-resident', roomType: 'Twin', room: 13, usd: 330, ksh: 42900, paidUsd: 0 },
   { name: 'Shalin', residency: 'Resident', roomType: 'Twin', room: 13, usd: 365, ksh: 47450, paidUsd: 0 },
-  { name: 'Leena', residency: 'Non-resident', roomType: 'Twin', room: 14, usd: 330, ksh: 42900, paidUsd: 0 },
+  { name: 'Leora', residency: 'Non-resident', roomType: 'Twin', room: 14, usd: 330, ksh: 42900, paidUsd: 0 },
   { name: 'Priya', residency: 'Non-resident', roomType: 'Twin', room: 14, usd: 500, ksh: 65000, paidUsd: 0 },
   { name: 'Jinal', residency: 'Resident', roomType: 'Twin', room: 15, usd: 365, ksh: 47450, paidUsd: 0 },
   { name: 'Nishi', residency: 'Resident', roomType: 'Twin', room: 15, usd: 365, ksh: 47450, paidUsd: 0 },
@@ -153,7 +154,7 @@ function SafariTripPage() {
       <header className="topbar">
         <a className="brand" href="#top" aria-label="Taita Hills trip home">
           <span className="brand-mark"><Binoculars size={21} /></span>
-          <span>50 Kachoris <em>2026</em></span>
+          <span>50 Kachoris <em>in the wild</em></span>
         </a>
         <nav aria-label="Main navigation">
           <a href="#itinerary">Itinerary</a>
@@ -168,15 +169,16 @@ function SafariTripPage() {
       <section className="hero" id="top">
         <div className="hero-content">
           <p className="eyebrow"><MapPin size={16} /> Taita Hills Wildlife Sanctuary, Kenya</p>
-          <h1>50 Kachoris<br /><span>in the wild</span></h1>
-          <p className="hero-copy">Everything the family needs for our Salt Lick safari—from room partners and daily plans to the deposit each traveler needs to send.</p>
+          <h1>50 Kachoris<br/><span>in the wild</span></h1>
+	  <p className="hero-tagline">Let the good times roar</p>
+          <p className="hero-copy">Everything you need to know before 34 Kachoris descend on the savannah—itinerary, roommates, car assignments, and amounts due.</p>
           <div className="hero-actions">
             <a className="primary-button" href="#payments">Check my deposit <ChevronDown size={18} /></a>
             <a className="text-link" href="#itinerary">Explore the trip <span>↗</span></a>
           </div>
         </div>
         <aside className="trip-ticket" aria-label="Trip summary">
-          <div className="ticket-label">50 Kachoris · Safari pass</div>
+          <div className="ticket-label">34 Kachoris · Safari</div>
           <div className="ticket-route">
             <div><strong>MBA</strong><span>Mombasa</span></div>
             <div className="route-line"><Binoculars size={19} /></div>
@@ -185,7 +187,7 @@ function SafariTripPage() {
           <div className="ticket-meta">
             <span><small>Depart</small>28 OCT 2026</span>
             <span><small>Return</small>30 OCT 2026</span>
-            <span><small>Travelers</small>{guests.length}</span>
+            <span><small>Kachoris</small>{guests.length}</span>
           </div>
           <div className="countdown"><strong>{countdownDays}</strong><span>days until the first game drive</span></div>
         </aside>
@@ -219,10 +221,6 @@ function SafariTripPage() {
               <Binoculars className="day-icon" aria-hidden="true" />
             </article>
           ))}
-        </div>
-        <div className="optional-note">
-          <ShieldCheck />
-          <div><strong>Optional experiences</strong><span>Night game drive: $45 per person · Maasai village visit: $20 per person. These are not included in the payment ledger.</span></div>
         </div>
       </section>
 
@@ -259,14 +257,35 @@ function SafariTripPage() {
             <Waves />
             <div><p className="eyebrow">Pool access</p><h3>Swim next door</h3><p>Salt Lick has no pool. Pool access is available at neighboring Taita Hills Safari Resort & Spa; after lunch is the easiest window.</p></div>
           </article>
-          <article className="info-card contact-card">
-            <Mail />
-            <div><p className="eyebrow">Trip contact</p><h3>Sharik Suleman</h3><p><a href="mailto:Sharik@savannasecrets.com">Sharik@savannasecrets.com</a></p></div>
-          </article>
+         <article className="info-card contact-card">
+  <Mail />
+  <div>
+    <p className="eyebrow">Tour Operator</p>
+    <h3>Savanna Secrets Safaris Ltd</h3>
+    <p>
+      Mombasa<br />
+      Sharik Suleman — <a href="tel:+254721786885">+254 721 786 885</a><br />
+      WhatsApp — <a href="https://wa.me/254741888889" target="_blank" rel="noreferrer">+254 741 888 889</a><br />
+      <a href="mailto:Sharik@savannasecrets.com">Sharik@savannasecrets.com</a>
+    </p>
+  </div>
+</article>
           <article className="info-card included-card">
             <Palmtree />
             <div><p className="eyebrow">Package includes</p><h3>Stay, meals & game drives</h3><p>Accommodation, specified meals, sanctuary fees, transport and guiding are covered.</p></div>
           </article>
+<article className="info-card luggage-card">
+  <Briefcase />
+  <div>
+    <p className="eyebrow">🧳 Luggage</p>
+    <h3>Pack light for the safari</h3>
+    <ul>
+      <li>Safari vehicles have limited space.</li>
+      <li>If you're bringing two large suitcases, please try to take only one on safari.</li>
+      <li>We'll arrange for the second to be sent ahead to Casa Dina, ready for you on your return to Mombasa.</li>
+    </ul>
+  </div>
+</article>
         </div>
       </section>
 
