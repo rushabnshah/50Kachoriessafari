@@ -85,13 +85,93 @@ a { color: inherit; text-decoration: none; }
 .section-heading h2 { margin: 0; font: 700 clamp(42px, 5vw, 70px)/1 var(--display); letter-spacing: -.04em; }
 .split-heading { display: grid; grid-template-columns: 1.25fr .75fr; gap: 80px; align-items: end; margin-bottom: 55px; }
 .split-heading > p { margin: 0; color: #637066; line-height: 1.75; }
-.itinerary-grid { display: grid; grid-template-columns: .8fr 1.05fr 1.15fr; gap: 16px; align-items: stretch; }
-.day-card { min-height: 380px; padding: 27px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; color: var(--paper); background: var(--forest); border-radius: 2px; transition: transform .3s ease; }
-.day-card:hover { transform: translateY(-7px); }.day-card::after { content: ''; position: absolute; width: 250px; height: 250px; border: 1px solid rgba(251,247,238,.14); border-radius: 50%; right: -100px; bottom: -100px; }
-.day-card.sunrise { background: #b7653f; }.day-card.savanna { background: #53634c; transform: translateY(20px); }.day-card.savanna:hover { transform: translateY(13px); }.day-card.dusk { background: #243d31; }
-.day-number { color: rgba(251,247,238,.25); font: 700 76px/.8 var(--display); }
-.day-card-content { position: relative; z-index: 2; }.day-card-content > p:first-child { display: flex; justify-content: space-between; color: var(--amber); font: 500 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; }.day-card-content h3 { margin: 18px 0 14px; font: 700 28px/1.05 var(--display); }.day-card-content > p:last-child { margin: 0; color: rgba(251,247,238,.72); font-size: 13px; line-height: 1.7; }
-.day-icon { position: absolute; right: 27px; top: 29px; opacity: .65; }
+.itinerary-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  align-items: stretch;
+  width: 100%;
+}
+
+.day-card {
+  width: 100%;
+  min-height: 0;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  display: block;
+  color: var(--paper);
+  background-color: #090908;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(240,204,121,.35);
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(0,0,0,.28);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.day-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 55px rgba(0,0,0,.34);
+}
+
+/* The invitation artwork already contains the date, title, DJ,
+   description and dress-code text, so the website does not
+   duplicate that information over the artwork. */
+.day-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(5,5,4,.04), transparent 48%, rgba(5,5,4,.12));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.day-card.sunrise,
+.day-card.savanna,
+.day-card.savanna:hover,
+.day-card.dusk {
+  background-color: #090908;
+  transform: none;
+}
+
+.day-card-content,
+.day-number,
+.day-icon {
+  display: none !important;
+}
+
+/* Supports either an <img> element or a background image supplied
+   by PartyDays.tsx. */
+.day-card > img,
+.day-card .day-card-image,
+.day-card .party-day-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+}
+
+.day-card > img {
+  position: relative;
+  z-index: 0;
+}
+
+.day-card .day-card-image,
+.day-card .party-day-image {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
 .optional-note { display: flex; align-items: center; gap: 17px; margin-top: 56px; padding: 20px 24px; border: 1px solid var(--line); background: #f7f0e4; }.optional-note svg { color: var(--sun); flex: 0 0 auto; }.optional-note div { display: flex; flex-wrap: wrap; gap: 6px 18px; }.optional-note strong { font-size: 13px; }.optional-note span { color: #667068; font-size: 13px; }
 
 .wild-gallery { width: min(1380px, calc(100% - 48px)); margin: 0 auto 45px; padding: 18px; position: relative; display: grid; grid-template-columns: 1.5fr .72fr .92fr; gap: 13px; background: #171713; box-shadow: 14px 14px 0 #b8422f; }
@@ -142,7 +222,7 @@ footer { min-height: 125px; display: grid; grid-template-columns: 1fr 1fr 1fr; a
 @media (max-width: 680px) {
   .topbar { height: 66px; padding: 0 17px; }.brand > span:last-child { font-size: 14px; }.brand-mark { width: 34px; height: 34px; }.nav-cta { padding: 9px 11px; }.nav-cta svg { display: none; }
   .hero { min-height: 760px; padding: 70px 22px 55px; align-items: start; background-position: 68% center; }.hero::before { background: linear-gradient(90deg, rgba(9,23,15,.94), rgba(9,23,15,.52)), linear-gradient(0deg, rgba(9,23,15,.8), transparent); }.hero::after { inset: 10px; }.hero h1 { font-size: clamp(51px,18vw,78px); }.hero-copy { font-size: 15px; }.hero-actions { align-items: flex-start; flex-direction: column; gap: 18px; }.sun { width: 370px; right: -55%; top: 29%; }.giraffe { width: 90px; right: 7%; bottom: 27%; }.acacia-one { right: -10%; bottom: 31%; }.trip-ticket { width: 100%; margin-top: 85px; }.ticket-meta { grid-template-columns: 1fr 1fr .6fr; }.hero-credit { right: 18px; bottom: 12px; max-width: 230px; text-align: right; }
-  .quick-strip { grid-template-columns: 1fr; padding: 0 22px; }.quick-strip > div,.quick-strip > div:nth-child(3) { border-left: 1px solid var(--line); }.section { width: min(100% - 36px,1220px); padding: 78px 0; }.section-heading h2 { font-size: 45px; }.itinerary-grid { grid-template-columns: 1fr; }.day-card,.day-card.savanna,.day-card.savanna:hover { min-height: 330px; transform: none; }.day-card:last-child { grid-column: auto; }.optional-note div { display: block; }.optional-note span { display: block; margin-top: 5px; }.wild-gallery { width: calc(100% - 28px); grid-template-columns: 1fr; padding: 9px; box-shadow: 8px 8px 0 #b8422f; }.wild-gallery figure,.wild-gallery figure:last-child { min-height: 390px; grid-column: auto; }.wild-gallery figure:nth-child(2) { min-height: 470px; }
+  .quick-strip { grid-template-columns: 1fr; padding: 0 22px; }.quick-strip > div,.quick-strip > div:nth-child(3) { border-left: 1px solid var(--line); }.section { width: min(100% - 36px,1220px); padding: 78px 0; }.section-heading h2 { font-size: 45px; }.itinerary-grid { grid-template-columns: 1fr; }.day-card,.day-card.savanna,.day-card.savanna:hover { min-height: 0; transform: none; border-radius: 14px; }.day-card > img,.day-card .day-card-image,.day-card .party-day-image { aspect-ratio: auto; width: 100%; height: auto; object-fit: contain; }.day-card:last-child { grid-column: auto; }.optional-note div { display: block; }.optional-note span { display: block; margin-top: 5px; }.wild-gallery { width: calc(100% - 28px); grid-template-columns: 1fr; padding: 9px; box-shadow: 8px 8px 0 #b8422f; }.wild-gallery figure,.wild-gallery figure:last-child { min-height: 390px; grid-column: auto; }.wild-gallery figure:nth-child(2) { min-height: 470px; }
   .stay-feature { min-height: 590px; }.stay-copy { padding: 80px 25px 30px; }.stay-copy h2 { font-size: 48px; }.info-stack { grid-template-columns: 1fr; }.info-card { min-height: 170px; grid-template-columns: auto 1fr; }
   .payment-heading { grid-template-columns: 1fr; }.deposit-callout { width: 130px; height: 130px; }.money-summary { grid-template-columns: 1fr; }.money-summary article { min-height: 128px; }.ledger-toolbar { align-items: stretch; flex-direction: column; }.filter-group { overflow-x: auto; }.copy-button span { display: none; }
   footer { grid-template-columns: 1fr; text-align: center; }.footer-links, footer > div:first-child { justify-self: center; } footer p { margin: 0; }
@@ -302,3 +382,4 @@ footer { min-height: 125px; display: grid; grid-template-columns: 1fr 1fr 1fr; a
     height: 60px;
   }
 }
+
