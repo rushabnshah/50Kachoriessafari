@@ -592,21 +592,14 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
 
       </section>
 
-     <footer>
-  <div>
-    <span className="brand-mark">🎉</span>
-    <strong>50 Kachoris – The Party</strong>
-  </div>
 
-  <p>Jinal · Nishil · Jinesh · 50th birthday celebrations</p>
 
-  <div className="footer-links">
-    <a href="#top">Back to top ↑</a>
-    <a href="/admin" aria-label="Admin login">
-      🔒 Admin Login
-    </a>
-  </div>
-</footer>
+
+      <footer>
+        <div><span className="brand-mark">🎉</span><strong>50 Kachoris – The Party</strong></div>
+        <p>Jinal · Nishil · Jinesh · 50th birthday celebrations</p>
+        <div className="footer-links"><a href="#top">Back to top ↑</a></div>
+      </footer>
     </main>
   )
 }

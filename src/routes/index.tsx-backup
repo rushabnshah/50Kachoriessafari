@@ -19,11 +19,14 @@ import {
   Waves,
   ChevronLeft,
   ChevronRight,
+  Upload,
+  BookOpen,
+  Camera,
+  X,
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { ChangeEvent, FormEvent } from 'react'
 import { supabase } from '../lib/supabase'
-import PartyRooming from './PartyRooming'
 
 export const Route = createFileRoute('/')({
   component: ProtectedSafariTripPage,
@@ -173,7 +176,12 @@ type PhotoSettings = {
   party_gallery_url: string | null
 }
 
-const SAFARI_GOOGLE_PHOTOS_URL = 'https://photos.app.goo.gl/o3LhyBGNx8kapZyz7'
+type PartyRoom = {
+  room: string
+  guests: string[]
+}
+
+type PartyPhoto = { name: string; url: string; path: string }
 
 const lantanaSlides = [
   { src: '/assets/party/lantana_real/le-cafe-restaurant.jpg', alt: 'Le Café restaurant at Lantana Galu Beach', caption: 'Le Café · Lantana Galu Beach' },
@@ -186,41 +194,55 @@ const lantanaSlides = [
   { src: '/assets/party/lantana_real/lantana-beach.jpg', alt: 'Lantana Galu Beach', caption: 'Lantana · beachfront' },
 ]
 
+
 const dayThemes = {
-  'Return to Our Roots': {
-    className: 'roots',
-    eyebrow: 'Saturday · 24 October',
-    title: 'RETURN TO OUR ROOTS',
-    dj: 'DJ Frankie',
-    intro: 'As many of us return to our birthplace, DJ Frankie will set the mood with old-school tunes for a nostalgic journey down memory lane. It is only fitting that we honour the country where it all began.',
-    dress: 'Colours of the Kenya flag — please wear one dominant colour for the evening: red, black, green, or white.',
-    extra: 'Keep it simple. Let the Kenyan colours do the talking.',
-    icon: '🇰🇪',
-    image: '/assets/party/days/day-roots-wide.jpg',
-  },
-  'The Rave': {
-    className: 'rave',
-    eyebrow: 'Sunday · 25 October',
-    title: 'THE RAVE',
-    dj: 'DJ Açqé',
-    intro: 'Prepare for an unforgettable evening on the Lantana beachfront as DJ Açqé takes over the decks and keeps the celebration going into the early hours.',
-    dress: 'Hawaiian or beachwear.',
-    extra: 'To add to the fun, please make use of the props provided in your welcome party bags.',
-    icon: '🎧',
-    image: '/assets/party/days/day-rave-wide.jpg',
-  },
-  'The Wind Down': {
-    className: 'bollywood',
-    eyebrow: 'Monday · 26 October',
-    title: 'THE WIND DOWN',
-    dj: 'Bollywood evening',
-    intro: 'As the party weekend draws to a close, we’ll ease into a relaxed evening of melodic Bollywood classics to complement the Indian catering set out for the night.',
-    dress: 'None — please wear whatever makes you feel comfortable.',
-    extra: 'A relaxed final evening to round off the celebrations with good food, music and friends.',
-    icon: '🪔',
-    image: '/assets/party/days/day-bollywood-wide.jpg',
-  },
+  'Return to Our Roots': { className: 'roots', eyebrow: 'Saturday · 24 October', title: 'RETURN TO OUR ROOTS', dj: 'DJ Frankie', intro: 'As many of us return to our birthplace, DJ Frankie will set the mood with old-school tunes for a nostalgic journey down memory lane. It is only fitting that we honour the country where it all began.', dress: 'Colours of the Kenya flag — please wear one dominant colour for the evening: red, black, green, or white.', extra: 'Keep it simple. Let the Kenyan colours do the talking.', icon: '🇰🇪', image: '/assets/party/days/day-roots-wide.jpg' },
+  'The Rave': { className: 'rave', eyebrow: 'Sunday · 25 October', title: 'THE RAVE', dj: 'DJ Açqé', intro: 'Prepare for an unforgettable evening on the Lantana beachfront as DJ Açqé takes over the decks and keeps the celebration going into the early hours.', dress: 'Hawaiian or beachwear.', extra: 'To add to the fun, please make use of the props provided in your welcome party bags.', icon: '🎧', image: '/assets/party/days/day-rave-wide.jpg' },
+  'The Wind Down': { className: 'bollywood', eyebrow: 'Monday · 26 October', title: 'THE WIND DOWN', dj: 'Bollywood evening', intro: 'As the party weekend draws to a close, we’ll ease into a relaxed evening of melodic Bollywood classics to complement the Indian catering set out for the night.', dress: 'None — please wear whatever makes you feel comfortable.', extra: 'A relaxed final evening to round off the celebrations with good food, music and friends.', icon: '🪔', image: '/assets/party/days/day-bollywood-wide.jpg' },
 }
+
+const provisionalPartyRooms: PartyRoom[] = [
+  { room: 'R1', guests: ['Arvind mama', 'Indu mami'] },
+  { room: 'R2', guests: ['Nilesh mama', 'Raksha mami'] },
+  { room: 'R3', guests: ['Surbhi masi', 'Ashok masa'] },
+  { room: 'R4', guests: ['Shakumasi', 'Shaila'] },
+  { room: 'R5', guests: ['Dina masi', 'Nitin masa'] },
+  { room: 'R6', guests: ['Anila masi', 'Vinod masa'] },
+  { room: 'R7', guests: ['Nishil', 'Rushab'] },
+  { room: 'R8', guests: ['Jinesh', 'Jyoti'] },
+  { room: 'R9', guests: ['Meher', 'Samay'] },
+  { room: 'R10', guests: ['Hemel', 'Shinal'] },
+  { room: 'R11', guests: ['Sachi', 'Siya'] },
+  { room: 'R12', guests: ['Sejal', 'Nishu'] },
+  { room: 'R13', guests: ['Chirag', 'Rena'] },
+  { room: 'R14', guests: ['Miya', 'Kayaan'] },
+  { room: 'R15', guests: ['Paraag', 'Hemali'] },
+  { room: 'R16', guests: ['Kaiya', 'Aaron'] },
+  { room: 'R17', guests: ['Sahil', 'Aasav'] },
+  { room: 'R18', guests: ['Dipan', 'Pooja', 'Ehaan'] },
+  { room: 'R19', guests: ['Shalin', 'Priya'] },
+  { room: 'R20', guests: ['Rohin', 'Leora'] },
+  { room: 'R21', guests: ['Rushina', 'Nitin', 'Mahi'] },
+  { room: 'R22', guests: ['Maanika', 'Aarti'] },
+  { room: 'R23', guests: ['Seema', 'Jignesh'] },
+  { room: 'R24', guests: ['Sheena', 'Mayank'] },
+  { room: 'R25', guests: ['Kush', 'Anish'] },
+  { room: 'R26', guests: ['Priya', 'Binoy'] },
+  { room: 'R27', guests: ['Atul', 'Meeta'] },
+  { room: 'R28', guests: ['Ashish', 'Anisha'] },
+  { room: 'R29', guests: ['Meehir', 'Sejal'] },
+  { room: 'R30', guests: ['Sirj', 'Vaish'] },
+  { room: 'R31', guests: ['Sachen', 'Minal'] },
+  { room: 'R32', guests: ['Mai', 'Luke'] },
+  { room: 'R33', guests: ['Sagar', 'Poonam'] },
+  { room: 'R34', guests: ['Nivaan', 'Sanaya'] },
+  { room: 'R35', guests: ['Manju mami', 'Alika Shah'] },
+  { room: 'R36', guests: ['Neel', 'Anya'] },
+  { room: 'R37', guests: ['Shilen Pattani', 'Anjali Pattani'] },
+  { room: 'R38', guests: ['Suraj', 'Ajul'] },
+  { room: 'R39', guests: ['Shanay'] },
+  { room: 'R40', guests: ['Jinal', 'Caroline'] },
+]
 
 const fallbackPartyEvents: PartyEvent[] = [
   {
@@ -368,34 +390,49 @@ function ProtectedSafariTripPage() {
 function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
   const [partyEvents, setPartyEvents] = useState<PartyEvent[]>(fallbackPartyEvents)
   const [photoSettings, setPhotoSettings] = useState<PhotoSettings | null>(null)
+  const [showRooming, setShowRooming] = useState(false)
+  const [roomQuery, setRoomQuery] = useState('')
   const [lantanaIndex, setLantanaIndex] = useState(0)
   const [selectedDayIndex, setSelectedDayIndex] = useState(0)
+  const [selectedPhoto, setSelectedPhoto] = useState<PartyPhoto | null>(null)
+  const [partyPhotos, setPartyPhotos] = useState<PartyPhoto[]>([])
+  const [photoLoading, setPhotoLoading] = useState(false)
+  const [uploadingPhotos, setUploadingPhotos] = useState(false)
+  const [photoMessage, setPhotoMessage] = useState('')
 
+  // Party content is available from the local fallback data, so the public
+  // party page must not fail to render if Supabase is unavailable locally.
   useEffect(() => {
     let active = true
 
     async function loadPartyPage() {
-      const [partyResult, photosResult] = await Promise.all([
-        supabase
-          .from('public_party_events')
-          .select('id, title, date, start_time, end_time, location, description, notes')
-          .order('date', { ascending: true })
-          .order('start_time', { ascending: true }),
-        supabase
-          .from('public_photo_settings')
-          .select('id, title, description, safari_gallery_url, party_gallery_url')
-          .limit(1)
-          .maybeSingle(),
-      ])
+      try {
+        const [partyResult, photosResult] = await Promise.all([
+          supabase
+            .from('public_party_events')
+            .select('id, title, date, start_time, end_time, location, description, notes')
+            .order('date', { ascending: true })
+            .order('start_time', { ascending: true }),
+          supabase
+            .from('public_photo_settings')
+            .select('id, title, description, safari_gallery_url, party_gallery_url')
+            .limit(1)
+            .maybeSingle(),
+        ])
 
-      if (!active) return
+        if (!active) return
 
-      if (!partyResult.error && partyResult.data?.length) {
-        setPartyEvents(partyResult.data)
-      }
+        if (!partyResult.error && partyResult.data?.length) {
+          setPartyEvents(partyResult.data)
+        }
 
-      if (!photosResult.error) {
-        setPhotoSettings(photosResult.data ?? null)
+        if (!photosResult.error) {
+          setPhotoSettings(photosResult.data ?? null)
+        }
+      } catch (error) {
+        // Supabase is optional for the public party page. Keep the local
+        // party content working if the local Netlify/Supabase service is down.
+        console.warn('Party live data unavailable; using local party data.', error)
       }
     }
 
@@ -404,6 +441,47 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
     return () => {
       active = false
     }
+  }, [])
+
+  useEffect(() => {
+    let active = true
+
+    async function loadPartyPhotos() {
+      setPhotoLoading(true)
+      try {
+        const { data, error } = await supabase.storage
+          .from('party-photos')
+          .list('', { limit: 100, sortBy: { column: 'created_at', order: 'desc' } })
+
+        if (!active) return
+        if (error) {
+          console.warn('Party photo storage unavailable; starting with an empty gallery.', error)
+          setPartyPhotos([])
+          return
+        }
+
+        setPartyPhotos(
+          (data ?? [])
+            .filter((file) => file.name)
+            .map((file) => {
+              const { data: publicUrl } = supabase.storage
+                .from('party-photos')
+                .getPublicUrl(file.name)
+              return { name: file.name, path: file.name, url: publicUrl.publicUrl }
+            }),
+        )
+      } catch (error) {
+        if (active) {
+          console.warn('Party photo storage unavailable; starting with an empty gallery.', error)
+          setPartyPhotos([])
+        }
+      } finally {
+        if (active) setPhotoLoading(false)
+      }
+    }
+
+    loadPartyPhotos()
+    return () => { active = false }
   }, [])
 
   useEffect(() => {
@@ -416,6 +494,43 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
     }, 5000)
     return () => window.clearInterval(timer)
   }, [])
+
+  async function handlePartyPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? [])
+    if (!files.length) return
+    setUploadingPhotos(true)
+    setPhotoMessage('Uploading photos…')
+    try {
+      for (const file of files) {
+        if (!file.type.startsWith('image/')) continue
+        const safeName = file.name.toLowerCase().replace(/[^a-z0-9._-]+/g, '-')
+        const path = `${Date.now()}-${crypto.randomUUID()}-${safeName}`
+        const { error } = await supabase.storage.from('party-photos').upload(path, file, { contentType: file.type, upsert: false })
+        if (error) throw error
+      }
+      const { data } = await supabase.storage.from('party-photos').list('', { limit: 100, sortBy: { column: 'created_at', order: 'desc' } })
+      setPartyPhotos((data ?? []).filter((file) => file.name).map((file) => {
+        const { data: publicUrl } = supabase.storage.from('party-photos').getPublicUrl(file.name)
+        return { name: file.name, path: file.name, url: publicUrl.publicUrl }
+      }))
+      setPhotoMessage('Photos uploaded — thank you!')
+    } catch (error) {
+      console.error(error)
+      setPhotoMessage('Sorry, the upload failed. Please try again.')
+    } finally {
+      setUploadingPhotos(false)
+      event.target.value = ''
+    }
+  }
+
+  const filteredRooms = useMemo(() => {
+    const q = roomQuery.trim().toLowerCase()
+    if (!q) return provisionalPartyRooms
+    return provisionalPartyRooms.filter((room) =>
+      room.room.toLowerCase().includes(q) ||
+      room.guests.some((guest) => guest.toLowerCase().includes(q))
+    )
+  }, [roomQuery])
 
   const displayPartyEvents = useMemo(() => {
     const findEvent = (terms: string[]) =>
@@ -458,21 +573,171 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
       <style>{`
         .party-page{--gold:#d7a84e;--gold2:#f0cc79;--ink:#0c0c0b;background:#0b0b0a;color:#f7f0e5;min-height:100vh;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
         .party-toolbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:flex-end;gap:20px;padding:12px 28px;background:rgba(8,8,7,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(240,204,121,.18)}
-        .party-toolbar .brand{display:none}.party-switches{display:flex;gap:8px}.party-switch{border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;padding:10px 16px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer}.party-switch.active{background:var(--gold);color:#15120d;border-color:var(--gold)}
+        .party-toolbar .brand{font-weight:800;white-space:nowrap;color:#fff}.party-switches{display:flex;gap:8px}.party-switch{border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;padding:10px 16px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer}.party-switch.active{background:var(--gold);color:#15120d;border-color:var(--gold)}
         .eyebrow{margin:0 0 8px;text-transform:uppercase;letter-spacing:.18em;font-size:.72rem;font-weight:800;color:var(--gold2)}
-        .party-host-hero{position:relative;min-height:clamp(600px,43vw,700px);overflow:hidden;border-bottom:1px solid rgba(240,204,121,.28);background-color:#090908;background-image:linear-gradient(90deg,rgba(5,5,4,.96) 0%,rgba(5,5,4,.86) 22%,rgba(5,5,4,.62) 42%,rgba(5,5,4,.28) 62%,rgba(5,5,4,.08) 82%,rgba(5,5,4,.02) 100%),url("/assets/party/hero-galu-sunset-dark.jpg");background-size:cover;background-position:center center;background-repeat:no-repeat}.party-hero-logo-overlay{position:absolute;z-index:2;left:63%;top:54%;right:auto;transform:translate(-50%,-50%);width:min(32vw,455px);max-height:82%;display:flex;align-items:center;justify-content:center;pointer-events:none}.party-hero-logo-overlay img{display:block;width:100%;height:auto;max-height:570px;object-fit:contain;filter:drop-shadow(0 10px 24px rgba(0,0,0,.72)) drop-shadow(0 0 8px rgba(214,168,78,.16))}.party-host-copy{position:relative;z-index:3;min-height:inherit;width:min(680px,52%);max-width:680px;padding:clamp(54px,6vw,88px) clamp(34px,6vw,92px);display:flex;flex-direction:column;justify-content:center;background:linear-gradient(90deg,rgba(7,7,6,.94) 0%,rgba(7,7,6,.72) 52%,rgba(7,7,6,.18) 82%,transparent 100%)}.party-host-copy h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(3.1rem,5vw,5.3rem);font-weight:400;font-style:normal;line-height:.98;margin:0 0 22px;letter-spacing:-.035em;color:#f0cc79;text-shadow:0 3px 22px rgba(0,0,0,.5)}.party-host-copy h1:after{content:"";display:block;width:190px;height:1px;margin-top:22px;background:linear-gradient(90deg,#d7a84e,rgba(215,168,78,.08))}.party-host-copy p{max-width:600px;color:rgba(255,255,255,.94);line-height:1.72;font-size:1.02rem;font-family:Georgia,"Times New Roman",serif}.party-host-copy .party-host-lede{font-family:Georgia,"Times New Roman",serif;font-size:1.08rem;font-style:normal;color:rgba(255,255,255,.94);line-height:1.62;margin-bottom:2px}.host-signoff{margin-top:16px;line-height:1.65;font-family:Georgia,"Times New Roman",serif;color:#f0cc79;font-size:1rem}.host-signoff em{font-style:italic;color:rgba(255,255,255,.9)}.host-signoff strong{display:inline-block;margin-top:3px;font-family:Georgia,"Times New Roman",serif;font-size:1.18rem;font-weight:600;letter-spacing:.075em;color:#f0cc79;text-shadow:0 2px 12px rgba(0,0,0,.5)}.party-host-meta{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:24px;padding-top:16px;border-top:1px solid rgba(240,204,121,.28);font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.82)}
-.party-50-logo-wrap{display:none}
+        .party-host-hero{
+          position:relative;
+          min-height:clamp(560px,42vw,680px);
+          overflow:hidden;
+          border-bottom:1px solid rgba(240,204,121,.35);
+          background-color:#090908;
+          background-image:
+            linear-gradient(90deg,rgba(5,5,4,.98) 0%,rgba(5,5,4,.90) 28%,rgba(5,5,4,.54) 52%,rgba(5,5,4,.18) 76%,rgba(5,5,4,.08) 100%),
+            url("/assets/party/hero-galu-extended-final.jpg");
+          background-size:cover;
+          background-position:center center;
+          background-repeat:no-repeat;
+        }
+        .party-host-hero::before{
+          content:"";
+          position:absolute;
+          inset:0 0 0 auto;
+          width:58%;
+          z-index:1;
+          background:url("/assets/party/hero-galu-extended-final.jpg") right center / 100% 100% no-repeat;
+          opacity:.9;
+          pointer-events:none;
+        }
+        .party-host-hero::after{
+          content:"";
+          position:absolute;
+          inset:0;
+          z-index:1;
+          background:linear-gradient(90deg,rgba(8,8,7,.28) 0%,rgba(8,8,7,.08) 48%,transparent 72%);
+          pointer-events:none;
+        }
+.party-hero-logo-overlay{display:none}
+        .party-host-copy{
+          position:relative;
+          z-index:3;
+          min-height:inherit;
+          width:min(650px,50%);
+          max-width:650px;
+          padding:clamp(54px,6vw,90px) clamp(34px,5.5vw,88px);
+          display:flex;
+          flex-direction:column;
+          justify-content:center;
+          background:linear-gradient(90deg,rgba(7,7,6,.96) 0%,rgba(7,7,6,.82) 62%,rgba(7,7,6,.08) 100%);
+        }
+        .party-host-copy h1{
+          font-family:Georgia,"Times New Roman",serif;
+          font-size:clamp(3.4rem,5.4vw,6rem);
+          font-weight:500;
+          line-height:.94;
+          margin:0 0 24px;
+          letter-spacing:-.035em;
+          color:#f4d17d;
+          text-shadow:0 3px 24px rgba(0,0,0,.55);
+        }
+        .party-host-copy p{
+          max-width:600px;
+          color:rgba(255,255,255,.94);
+          line-height:1.65;
+          font-size:1rem;
+          font-family:Georgia,"Times New Roman",serif;
+        }
+        .party-host-copy .party-host-lede{
+          font-family:Georgia,"Times New Roman",serif;
+          font-size:1.32rem;
+          font-style:italic;
+          color:#fff;
+          line-height:1.5;
+          margin-bottom:4px;
+        }
+        .host-signoff{
+          margin-top:16px;
+          line-height:1.6;
+          font-family:Georgia,"Times New Roman",serif;
+          color:#f4d17d;
+          font-size:1.05rem;
+        }
+        .host-signoff strong{
+          font-family:Georgia,"Times New Roman",serif;
+          font-size:1.18rem;
+          letter-spacing:.04em;
+          color:#fff;
+        }
+        .party-host-meta{
+          display:flex;
+          flex-wrap:wrap;
+          gap:10px 24px;
+          margin-top:24px;
+          padding-top:16px;
+          border-top:1px solid rgba(240,204,121,.28);
+          font-size:.72rem;
+          text-transform:uppercase;
+          letter-spacing:.12em;
+          color:rgba(255,255,255,.82);
+        }
+        .party-50-logo-wrap{display:none}
 .party-meta-strip{display:grid;grid-template-columns:repeat(3,1fr);background:#0e0e0c;border-bottom:1px solid rgba(240,204,121,.2)}.party-meta-strip div{text-align:center;padding:18px 14px;border-right:1px solid rgba(240,204,121,.16)}.party-meta-strip div:last-child{border-right:0}.party-meta-strip strong{display:block;color:var(--gold2);font-family:Georgia,serif;font-size:1.2rem}.party-meta-strip span{display:block;margin-top:4px;color:rgba(255,255,255,.62);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em}
-        .party-section{padding:76px clamp(22px,5vw,80px);max-width:1380px;margin:0 auto}.party-section-heading{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:30px}.party-section-heading h2{font-family:Georgia,serif;font-size:clamp(2.2rem,4vw,4rem);line-height:.95;margin:0;color:#fff}.party-section-heading>p{max-width:540px;color:rgba(255,255,255,.68);line-height:1.7;margin:0}
-        .day-tabs{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid rgba(240,204,121,.42);border-radius:18px;overflow:hidden;background:#f7efe2;margin-bottom:22px}.day-tab{border:0;border-right:1px solid #dfcfb6;background:#f7efe2;color:#222;padding:18px 16px;cursor:pointer;font:inherit;transition:.2s}.day-tab:last-child{border-right:0}.day-tab strong{display:block;font-family:Georgia,serif;font-size:1.05rem}.day-tab span{display:block;margin-top:5px;color:#777;font-size:.82rem}.day-tab.active{background:linear-gradient(135deg,#e8c77f,#f7ead0);color:#15120d}.day-detail-panel{position:relative;width:100%;height:clamp(220px,23vw,340px);border:0;border-radius:18px;overflow:hidden;background:#111;box-shadow:0 18px 50px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center}.day-detail-bg{position:absolute;inset:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;overflow:hidden}.day-detail-bg img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.012)}.day-detail-content{display:none}.day-detail-date,.day-detail-content h3,.day-detail-content .dj,.day-detail-content p,.day-detail-grid,.day-detail-box{display:none}.day-theme-roots{background:#10261b;color:#fff}.day-theme-rave{background:#180b22;color:#fff}.day-theme-bollywood{background:#3a111b;color:#fff}.photo-viewer-backdrop{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:24px}.photo-viewer{position:relative;width:min(1100px,96vw);height:min(86vh,800px);display:grid;place-items:center}.photo-viewer img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 25px 90px rgba(0,0,0,.7)}.photo-viewer-close{position:absolute;right:0;top:-46px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;cursor:pointer}.photo-viewer-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid var(--gold);background:rgba(0,0,0,.7);color:var(--gold2);display:grid;place-items:center;cursor:pointer}.photo-viewer-nav.prev{left:-58px}.photo-viewer-nav.next{right:-58px}
+        .party-section{width:min(1380px,calc(100% - 48px));padding:76px 0;max-width:1380px;margin:0 auto;box-sizing:border-box}.party-section-heading{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:30px}.party-section-heading h2{font-family:Georgia,serif;font-size:clamp(2.2rem,4vw,4rem);line-height:.95;margin:0;color:#fff}.party-section-heading>p{max-width:540px;color:rgba(255,255,255,.68);line-height:1.7;margin:0}
+        .day-tabs{
+          display:grid;
+          grid-template-columns:repeat(3,1fr);
+          border:1px solid rgba(240,204,121,.42);
+          border-radius:18px;
+          overflow:hidden;
+          background:#f7efe2;
+          margin-bottom:22px;
+        }
+        .day-tab{
+          border:0;
+          border-right:1px solid #dfcfb6;
+          background:#f7efe2;
+          color:#222;
+          padding:18px 16px;
+          cursor:pointer;
+          font:inherit;
+          transition:.2s;
+        }
+        .day-tab:last-child{border-right:0}
+        .day-tab strong{display:block;font-family:Georgia,"Times New Roman",serif;font-size:1.05rem}
+        .day-tab span{display:block;margin-top:5px;color:#777;font-size:.82rem}
+        .day-tab.active{background:linear-gradient(135deg,#e8c77f,#f7ead0);color:#15120d}
+
+        /* The three day images are complete invitation artworks. Do not
+           duplicate their text with HTML overlays. Show the artwork intact. */
+        .day-detail-panel{
+          position:relative;
+          width:100%;
+          border:1px solid rgba(240,204,121,.35);
+          border-radius:24px;
+          overflow:hidden;
+          background:#090908;
+          box-shadow:0 24px 70px rgba(0,0,0,.35);
+          line-height:0;
+        }
+        .day-detail-bg{
+          position:relative;
+          inset:auto;
+          z-index:0;
+          width:100%;
+          overflow:hidden;
+          background:#090908;
+        }
+        .day-detail-bg img{
+          display:block;
+          width:100%;
+          height:auto;
+          max-width:100%;
+          object-fit:contain;
+          object-position:center;
+        }
+        .day-detail-panel:after{display:none}
+        .day-detail-content{display:none}
+        .day-theme-roots,.day-theme-rave,.day-theme-bollywood{background:#090908;color:#fff}
+.photo-viewer-backdrop{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:24px}.photo-viewer{position:relative;width:min(1100px,96vw);height:min(86vh,800px);display:grid;place-items:center}.photo-viewer img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 25px 90px rgba(0,0,0,.7)}.photo-viewer-close{position:absolute;right:0;top:-46px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;cursor:pointer}.photo-viewer-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid var(--gold);background:rgba(0,0,0,.7);color:var(--gold2);display:grid;place-items:center;cursor:pointer}.photo-viewer-nav.prev{left:-58px}.photo-viewer-nav.next{right:-58px}
 .party-location-grid{display:grid;grid-template-columns:.85fr 1.15fr;min-height:520px;border:1px solid rgba(240,204,121,.28);border-radius:24px;overflow:hidden;box-shadow:0 24px 65px rgba(0,0,0,.32)}.party-location-copy{padding:clamp(30px,5vw,64px);display:flex;flex-direction:column;justify-content:center;background:linear-gradient(145deg,#0f1f18,#173d2c)}.party-location-copy h2{font-family:Georgia,serif;font-size:clamp(2.4rem,4.4vw,4.6rem);line-height:.94;margin:0 0 18px;color:#fff}.party-location-copy p{color:rgba(255,255,255,.78);line-height:1.8}.party-location-copy .party-button{margin-top:16px;width:max-content}.party-location-carousel{position:relative;min-height:520px;background:#111;overflow:hidden}.party-location-carousel img{width:100%;height:100%;min-height:520px;object-fit:cover;display:block}.party-location-carousel:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.22),transparent 45%,rgba(0,0,0,.12));pointer-events:none}.party-image-controls{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;pointer-events:none;z-index:4}.party-image-controls button{pointer-events:auto;width:46px;height:46px;border-radius:50%;border:1px solid var(--gold);background:rgba(0,0,0,.58);color:var(--gold2);display:grid;place-items:center;cursor:pointer}.party-image-caption{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:60px 24px 20px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.78));font-weight:700}.party-image-dots{position:absolute;z-index:5;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:7px}.party-image-dots button{width:8px;height:8px;padding:0;border:1px solid rgba(255,255,255,.8);border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer}.party-image-dots button.active{width:24px;border-radius:999px;background:var(--gold)}
-        .party-rooming{background:#11100e;border:1px solid rgba(240,204,121,.22);border-radius:20px;overflow:hidden}.party-rooming-head{padding:22px;display:flex;gap:16px;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(240,204,121,.16)}.party-rooming-search{min-width:260px;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:11px 15px;font:inherit;background:#191815;color:#fff}.party-room-grid{display:grid;grid-template-columns:repeat(4,1fr)}.party-room{padding:17px 20px;border-bottom:1px solid rgba(255,255,255,.08);border-right:1px solid rgba(255,255,255,.08)}.party-room strong{display:block;color:var(--gold2);margin-bottom:6px}.party-room span{display:block;line-height:1.45;color:rgba(255,255,255,.86)}.party-room-count{opacity:.55;font-size:.78rem;margin-top:5px}.party-button{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--gold);border-radius:999px;padding:12px 18px;background:var(--gold);color:#16120b;font-weight:800;cursor:pointer;font:inherit;text-decoration:none}.party-button:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.2)}.photo-share-card{display:flex;align-items:flex-start;gap:22px}.photo-share-card>svg{flex:0 0 auto;color:var(--gold2)}.photo-share-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;margin-top:14px;padding:12px 20px;border:1px solid var(--gold);border-radius:999px;background:var(--gold);color:#16120b;font-weight:800;text-decoration:none;transition:transform .2s ease,box-shadow .2s ease}.photo-share-button:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.22)}.party-photo-disabled{opacity:.45;cursor:not-allowed;pointer-events:none}.photo-share-placeholder,.party-photo-placeholder{display:block;margin-top:14px;color:rgba(255,255,255,.55);font-size:.9rem}.party-button.secondary{background:transparent;color:#fff}.party-bottom-links{display:grid;grid-template-columns:1fr 1fr;gap:18px}.party-bottom-card{padding:28px;border:1px solid rgba(240,204,121,.25);border-radius:20px;background:#11100e}.party-bottom-card h3{font-family:Georgia,serif;font-size:1.8rem;margin:0 0 8px}.party-bottom-card p{color:rgba(255,255,255,.68);line-height:1.6}.party-photo-upload{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}.party-upload-label{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:var(--gold);color:#16120b;font-weight:800;cursor:pointer}.party-upload-label input{display:none}.party-photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}.party-photo-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;display:block}.party-photo-empty{margin-top:20px;padding:28px;border:1px dashed rgba(240,204,121,.3);border-radius:16px;text-align:center;color:rgba(255,255,255,.6)}
+        .party-rooming{background:#11100e;border:1px solid rgba(240,204,121,.22);border-radius:20px;overflow:hidden}.party-rooming-head{padding:22px;display:flex;gap:16px;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(240,204,121,.16)}.party-rooming-search{min-width:260px;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:11px 15px;font:inherit;background:#191815;color:#fff}.party-room-grid{display:grid;grid-template-columns:repeat(4,1fr)}.party-room{padding:17px 20px;border-bottom:1px solid rgba(255,255,255,.08);border-right:1px solid rgba(255,255,255,.08)}.party-room strong{display:block;color:var(--gold2);margin-bottom:6px}.party-room span{display:block;line-height:1.45;color:rgba(255,255,255,.86)}.party-room-count{opacity:.55;font-size:.78rem;margin-top:5px}.party-button{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--gold);border-radius:999px;padding:12px 18px;background:var(--gold);color:#16120b;font-weight:800;cursor:pointer;font:inherit;text-decoration:none}.party-button.secondary{background:transparent;color:#fff}.party-bottom-links{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.party-bottom-card{min-height:260px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between}.party-bottom-icon{color:var(--gold2);margin-bottom:8px}.party-bottom-card h3{font-family:Georgia,serif;font-size:1.75rem;margin:0 0 8px;color:var(--gold2);text-transform:uppercase;letter-spacing:.04em}.party-bottom-card p{color:rgba(255,255,255,.72);line-height:1.55}.party-bottom-card .party-button{margin-top:18px;align-self:center;min-width:210px;justify-content:center;border-radius:4px;text-transform:uppercase;letter-spacing:.06em}.party-bottom-card-photos .party-photo-upload{width:100%;justify-content:center}.party-photo-gallery-pane{margin-top:24px;padding-top:24px;border-top:1px solid rgba(240,204,121,.18)}.party-photo-message{margin-top:12px;text-align:center;color:rgba(255,255,255,.7)}.party-photo-upload{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}.party-upload-label{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:var(--gold);color:#16120b;font-weight:800;cursor:pointer}.party-upload-label input{display:none}.party-photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}.party-photo-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;display:block}.party-photo-empty{margin-top:20px;padding:28px;border:1px dashed rgba(240,204,121,.3);border-radius:16px;text-align:center;color:rgba(255,255,255,.6)}
         .day-theme-roots{background:linear-gradient(135deg,#0d3021,#163d2c);color:#fff}.day-theme-rave{background:linear-gradient(135deg,#22052f,#5b0c61);color:#fff}.day-theme-bollywood{background:linear-gradient(135deg,#5d1021,#8e2735);color:#fff}.day-modal-backdrop{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.78);display:grid;place-items:center;padding:20px}.day-modal{width:min(980px,100%);max-height:92vh;overflow:hidden;border-radius:24px;position:relative;box-shadow:0 30px 90px rgba(0,0,0,.6)}.day-modal-media{height:330px;position:relative;overflow:hidden}.day-modal-media img{width:100%;height:100%;object-fit:cover;display:block}.day-modal-media-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.86),rgba(0,0,0,.05) 70%)}.day-modal-title{position:absolute;left:38px;right:70px;bottom:28px;color:#fff}.day-modal-title p{margin:0 0 8px;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem;font-weight:800;opacity:.82}.day-modal-title h2{font-family:Georgia,serif;font-size:clamp(2.4rem,6vw,5rem);line-height:.92;margin:0}.day-modal-scroll{max-height:calc(92vh - 330px);overflow-y:auto}.day-modal-copy{padding:34px 40px 44px}.day-modal-copy h3{margin:28px 0 10px;font-size:1.1rem;text-transform:uppercase;letter-spacing:.08em}.day-modal p{max-width:760px;line-height:1.8;font-size:1.05rem}.day-detail-row{display:flex;justify-content:space-between;gap:18px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.16)}.day-detail-row span{font-size:.75rem;letter-spacing:.12em;font-weight:800;opacity:.68}.day-detail-row strong{text-align:right}.day-dress{padding:20px 22px;border:1px solid rgba(255,255,255,.25);border-radius:16px;background:rgba(0,0,0,.18);line-height:1.7}.day-modal-close{position:absolute;right:18px;top:18px;z-index:10;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;cursor:pointer}
-        @media(max-width:560px){.photo-share-card{gap:14px}.photo-share-button{width:100%}}
-        @media(max-width:900px){.party-hero-logo-overlay{left:62%;width:min(42vw,360px);top:50%}.party-host-copy{width:min(680px,58%)}.party-toolbar{padding:10px 18px}.party-host-hero{min-height:720px;background-position:center top}.party-hero-logo-overlay{width:min(62vw,430px);right:4%;top:29%;opacity:.94}.party-host-copy{width:72%;max-width:680px;min-height:720px;padding:330px 34px 48px;background:linear-gradient(180deg,rgba(7,7,6,.06) 0%,rgba(7,7,6,.78) 43%,rgba(7,7,6,.97) 66%)}}
-        @media(max-width:560px){.party-toolbar{padding:10px 14px}.party-switches{width:100%;justify-content:flex-end}.party-host-hero{min-height:760px;background-position:center top}.party-hero-logo-overlay{width:78vw;right:11%;top:23%;opacity:.9}.party-host-copy{width:100%;min-height:760px;padding:340px 22px 44px;background:linear-gradient(180deg,rgba(7,7,6,.04) 0%,rgba(7,7,6,.72) 43%,rgba(7,7,6,.98) 65%)}.party-host-copy h1{font-size:3.3rem}.party-host-copy .party-host-lede{font-size:1.05rem}}
-        @media(max-width:900px){.party-toolbar{align-items:flex-start;flex-direction:column}.party-switches{width:100%;justify-content:flex-start}.party-location-grid{grid-template-columns:1fr}.party-section{padding:58px 18px}.party-section-heading{display:block}.party-section-heading>p{margin-top:14px}.party-day-detail{grid-template-columns:1fr}.party-room-grid{grid-template-columns:repeat(2,1fr)}.party-bottom-links{grid-template-columns:1fr}.party-bottom-links-three{grid-template-columns:1fr}.party-location-carousel,.party-location-carousel img{min-height:360px}.day-detail-panel{height:clamp(210px,31vw,300px)}.day-detail-content{min-height:600px}}
-        @media(max-width:560px){.party-hero-logo-overlay{left:50%;top:25%;width:62vw;max-height:290px}.party-host-hero{min-height:760px;background-position:center top}.party-host-copy{width:100%;min-height:760px;padding:340px 22px 44px;background:linear-gradient(180deg,rgba(7,7,6,.02) 0%,rgba(7,7,6,.56) 42%,rgba(7,7,6,.96) 64%)}.party-host-copy h1{font-size:3.25rem}.party-host-copy .party-host-lede{font-size:1.02rem}.party-host-copy p{font-size:.98rem}.party-meta-strip{grid-template-columns:1fr}.party-meta-strip div{border-right:0;border-bottom:1px solid rgba(240,204,121,.16)}.party-host-copy{padding:48px 22px;min-height:600px}.party-host-copy h1{font-size:4rem}.day-tabs{grid-template-columns:1fr}.day-tab{border-right:0;border-bottom:1px solid #dfcfb6}.day-tab:last-child{border-bottom:0}.day-detail-panel{height:210px;border-radius:14px}.day-detail-content{padding:38px 24px;min-height:620px}.day-detail-content h3{font-size:3.4rem}.party-room-grid{grid-template-columns:1fr}.party-photo-grid{grid-template-columns:repeat(2,1fr)}.day-modal-media{height:250px}.day-modal-scroll{max-height:calc(92vh - 250px)}.day-modal-copy{padding:26px 22px 34px}.day-detail-row{flex-direction:column;gap:4px}.day-detail-row strong{text-align:left}}
+        @media(max-width:1100px){.party-bottom-links{grid-template-columns:1fr 1fr}}
+        @media(max-width:900px){
+          .party-host-hero::before{width:100%;opacity:.42}
+          .party-host-copy{width:100%;max-width:none;background:linear-gradient(90deg,rgba(7,7,6,.94),rgba(7,7,6,.68),rgba(7,7,6,.2))}
+        }
+        @media(max-width:900px){.party-toolbar{align-items:flex-start;flex-direction:column}.party-switches{width:100%;justify-content:flex-start}.party-location-grid{grid-template-columns:1fr}.party-section{padding:58px 18px}.party-section-heading{display:block}.party-section-heading>p{margin-top:14px}.party-day-detail{grid-template-columns:1fr}.party-room-grid{grid-template-columns:repeat(2,1fr)}.party-bottom-links{grid-template-columns:1fr}.party-location-carousel,.party-location-carousel img{min-height:360px}.day-detail-content{min-height:600px}}
+        @media(max-width:560px){.party-section{width:calc(100% - 28px);padding:58px 0}.party-meta-strip{grid-template-columns:1fr}.party-meta-strip div{border-right:0;border-bottom:1px solid rgba(240,204,121,.16)}.party-host-copy{padding:48px 22px;min-height:600px}.party-host-copy h1{font-size:4rem}.day-detail-content{width:100%;min-height:600px;padding:38px 24px;background:linear-gradient(90deg,rgba(7,7,6,.82),rgba(7,7,6,.55) 80%,transparent)}.day-detail-grid{grid-template-columns:1fr}.day-tabs{grid-template-columns:1fr}.day-tab{border-right:0;border-bottom:1px solid #dfcfb6}.day-tab:last-child{border-bottom:0}.day-detail-content{width:100%;min-height:600px;padding:38px 24px;background:linear-gradient(90deg,rgba(7,7,6,.9),rgba(7,7,6,.62))}.day-detail-content h3{font-size:3.4rem}.party-room-grid{grid-template-columns:1fr}.party-photo-grid{grid-template-columns:repeat(2,1fr)}.day-modal-media{height:250px}.day-modal-scroll{max-height:calc(92vh - 250px)}.day-modal-copy{padding:26px 22px 34px}.day-detail-row{flex-direction:column;gap:4px}.day-detail-row strong{text-align:left}}
       `}</style>
 
       <header className="party-toolbar">
@@ -483,8 +748,7 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
       </header>
 
       <section className="party-host-hero" id="top" aria-label="Welcome from Jinal, Nishil and Jinesh">
-        <div className="party-hero-logo-overlay" aria-hidden="true"><img src="/assets/party/party-50-logo-transparent.png" alt="" /></div>
-        <div className="party-host-copy">
+                <div className="party-host-copy">
           <h1>Welcome to our 50th</h1>
           <p className="party-host-lede">We can’t wait to celebrate this very special milestone with all of you.</p>
           <p>What better way to mark our 50th birthdays than by bringing everyone together in Kenya — surrounded by family, friends, sunshine, music and plenty of good food?</p>
@@ -511,9 +775,21 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
         {(() => {
           const event = displayPartyEvents[selectedDayIndex] ?? displayPartyEvents[0]
           const theme = themeForEvent(event)
-          return <article className={`day-detail-panel day-theme-${theme.className}`} aria-label={`${theme.title} — ${theme.eyebrow}`}>
-            <div className="day-detail-bg">
-              <img src={theme.image} alt={`${theme.title} party artwork`} />
+          return <article className={`day-detail-panel day-theme-${theme.className}`}>
+            <div className="day-detail-bg"><img src={theme.image} alt="" /></div>
+            <div className="day-detail-content">
+              <div className="day-detail-date">{theme.eyebrow}</div>
+              <div className="eyebrow" style={{marginTop:12}}>{theme.icon} Lantana Galu Beach</div>
+              <h3>{theme.title}</h3>
+              <div className="dj">{theme.dj}</div>
+              <p>{theme.intro}</p>
+              <p>{theme.extra}</p>
+              <div className="day-detail-grid">
+                <div className="day-detail-box"><small>Dress code</small><strong>{theme.dress}</strong></div>
+                <div className="day-detail-box"><small>Location</small><strong>{event.location ?? 'Lantana Galu Beach'}</strong></div>
+              </div>
+              {(event.start_time || event.end_time) && <div className="day-detail-box" style={{marginTop:12}}><small>Time</small><strong>{event.start_time ?? ''}{event.end_time ? ` – ${event.end_time}` : ''}</strong></div>}
+              {event.notes && <p style={{marginTop:18}}><strong>Good to know:</strong> {event.notes}</p>}
             </div>
           </article>
         })()}
@@ -550,63 +826,62 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
           <div><p className="eyebrow">81 provisional guests · 40 rooms</p><h2>Find Your Room</h2></div>
           <p>Search by room number or name. This is the provisional rooming list and can be updated later as arrangements are confirmed.</p>
         </div>
-        <PartyRooming />
+        <div className="party-rooming">
+          <div className="party-rooming-head">
+            <div><strong>Party accommodation</strong><div style={{opacity:.55,marginTop:4}}>38 double rooms · 2 triple rooms · 1 single room</div></div>
+            <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+              <input className="party-rooming-search" value={roomQuery} onChange={(event) => setRoomQuery(event.target.value)} placeholder="Search a name or room…" aria-label="Search party rooming" />
+              <button className="party-button secondary" type="button" onClick={() => setShowRooming(value => !value)}>{showRooming ? 'Hide rooming list' : 'View rooming list'}</button>
+            </div>
+          </div>
+          {showRooming && <div className="party-room-grid">{filteredRooms.map(room => <div className="party-room" key={room.room}><strong>{room.room}</strong>{room.guests.map(guest => <span key={guest}>{guest}</span>)}<span className="party-room-count">{room.guests.length} {room.guests.length===1?'guest':'guests'}</span></div>)}</div>}
+          {showRooming && filteredRooms.length===0 && <div style={{padding:24}}>No room or guest found for “{roomQuery}”.</div>}
+        </div>
       </section>
 
-      <section className="party-section" id="party-links">
-        <div className="party-bottom-links party-bottom-links-three">
-          <div className="party-bottom-card party-bottom-card-action">
-            <div className="party-bottom-icon">🛏️</div><p className="eyebrow">Accommodation</p><h3>Find Your Room</h3><p>See your room details and who you're sharing with.</p>
+      <section className="party-section party-bottom-section" id="party-links">
+        <div className="party-bottom-links">
+          <div className="party-bottom-card">
+            <div className="party-bottom-icon"><BedDouble size={46} strokeWidth={1.6} /></div>
+            <div><p className="eyebrow">Stay details</p><h3>Find Your Room</h3><p>See your room details and who you're sharing with.</p></div>
             <a className="party-button" href="#rooms">View rooms</a>
           </div>
-          <div className="party-bottom-card party-bottom-card-action">
-            <div className="party-bottom-icon">📷</div>
-            <p className="eyebrow">Share the memories</p>
-            <h3>Party Photos</h3>
-            <p>View the photos from the celebrations and add your own memories to the shared Google Photos album.</p>
-            {photoSettings?.party_gallery_url ? (
-              <div className="party-photo-upload">
-                <a
-                  className="party-button"
-                  href={photoSettings.party_gallery_url}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  📷 View &amp; Add Photos <ExternalLink size={15} />
-                </a>
-              </div>
-            ) : (
-              <div className="party-photo-upload">
-                <span className="party-button party-photo-disabled" aria-disabled="true">
-                  📷 View &amp; Add Photos
-                </span>
-                <p className="party-photo-placeholder">Party Google Photos link will be added in Admin.</p>
-              </div>
-            )}
+          <div className="party-bottom-card party-bottom-card-photos">
+            <div className="party-bottom-icon"><Camera size={46} strokeWidth={1.6} /></div>
+            <div><p className="eyebrow">Share the memories</p><h3>Party Photos</h3><p>Upload your photos and view memories from the celebration.</p></div>
+            <div className="party-photo-upload">
+              <label className="party-upload-label"><Upload size={16} /> {uploadingPhotos ? 'Uploading…' : 'Upload photos'}<input type="file" accept="image/*" multiple onChange={handlePartyPhotoUpload} disabled={uploadingPhotos} /></label>
+              <button className="party-button secondary" type="button" onClick={() => document.getElementById('party-photo-gallery')?.scrollIntoView({behavior:'smooth'})}>View photos</button>
+              {photoSettings?.party_gallery_url && <a className="party-button secondary" href={photoSettings.party_gallery_url} target="_blank" rel="noreferrer">Shared gallery <ExternalLink size={15} /></a>}
+            </div>
           </div>
-          <div className="party-bottom-card party-bottom-card-action">
-            <div className="party-bottom-icon">📖</div><p className="eyebrow">For a bit of fun</p><h3>The Mongo Register</h3><p>See the full tongue-in-cheek register and all the classic entries.</p>
-            <a className="party-button" href="/assets/party/mongo-register.jpg" target="_blank" rel="noreferrer">View the register <ExternalLink size={15} /></a>
+          <div className="party-bottom-card">
+            <div className="party-bottom-icon"><BookOpen size={46} strokeWidth={1.6} /></div>
+            <div><p className="eyebrow">For a bit of fun</p><h3>The Mongo Register</h3><p>See the full legendary register and all the classic entries!</p></div>
+            <a className="party-button" href="/assets/party/mongo-register.jpg" target="_blank" rel="noreferrer">View the register</a>
           </div>
         </div>
-
+        <div id="party-photo-gallery" className="party-photo-gallery-pane">
+          {photoLoading ? <div className="party-photo-empty">Loading uploaded photos…</div> : partyPhotos.length ? <div className="party-photo-grid">{partyPhotos.map(photo => <button type="button" key={photo.path} onClick={() => setSelectedPhoto(photo)} style={{border:0,padding:0,background:"transparent",cursor:"zoom-in"}}><img src={photo.url} alt="Party memory" loading="lazy" /></button>)}</div> : <div className="party-photo-empty">Be the first to upload a memory from the weekend.</div>}
+          {photoMessage && <div className="party-photo-message">{photoMessage}</div>}
+        </div>
       </section>
 
-     <footer>
-  <div>
-    <span className="brand-mark">🎉</span>
-    <strong>50 Kachoris – The Party</strong>
-  </div>
 
-  <p>Jinal · Nishil · Jinesh · 50th birthday celebrations</p>
+      {selectedPhoto && <div className="photo-viewer-backdrop" role="dialog" aria-modal="true" aria-label="Party photo viewer" onClick={() => setSelectedPhoto(null)}>
+        <div className="photo-viewer" onClick={(event) => event.stopPropagation()}>
+          <button className="photo-viewer-close" type="button" aria-label="Close photo viewer" onClick={() => setSelectedPhoto(null)}><X size={20} /></button>
+          <button className="photo-viewer-nav prev" type="button" aria-label="Previous photo" onClick={() => { const i = partyPhotos.findIndex(p => p.path === selectedPhoto.path); setSelectedPhoto(partyPhotos[(i - 1 + partyPhotos.length) % partyPhotos.length]) }}><ChevronLeft /></button>
+          <img src={selectedPhoto.url} alt="Party memory enlarged" />
+          <button className="photo-viewer-nav next" type="button" aria-label="Next photo" onClick={() => { const i = partyPhotos.findIndex(p => p.path === selectedPhoto.path); setSelectedPhoto(partyPhotos[(i + 1) % partyPhotos.length]) }}><ChevronRight /></button>
+        </div>
+      </div>}
 
-  <div className="footer-links">
-    <a href="#top">Back to top ↑</a>
-    <a href="/admin" aria-label="Admin login">
-      🔒 Admin Login
-    </a>
-  </div>
-</footer>
+      <footer>
+        <div><span className="brand-mark">🎉</span><strong>50 Kachoris – The Party</strong></div>
+        <p>Jinal · Nishil · Jinesh · 50th birthday celebrations</p>
+        <div className="footer-links"><a href="#top">Back to top ↑</a></div>
+      </footer>
     </main>
   )
 }
@@ -910,26 +1185,19 @@ function SafariTripPage() {
             <p className="eyebrow">Share the memories</p>
             <h2>Safari photos</h2>
           </div>
-          <p>{photoSettings?.description ?? 'View the safari memories and add your own photos to the shared album.'}</p>
+          <p>{photoSettings?.description ?? 'Shared photos from the safari.'}</p>
         </div>
         <div className="info-stack">
-          <article className="info-card photo-share-card">
+          <article className="info-card">
             <Binoculars />
             <div>
-              <p className="eyebrow">Google Photos</p>
+              <p className="eyebrow">Safari photos</p>
               <h3>{photoSettings?.title ?? 'Safari Photos'}</h3>
-              <p>
-                View the safari memories and add your own photos to the shared
-                Google Photos album.
-              </p>
-              <a
-                className="photo-share-button"
-                href={photoSettings?.safari_gallery_url || SAFARI_GOOGLE_PHOTOS_URL}
-                target="_blank"
-                rel="noreferrer"
-              >
-                📷 View &amp; Add Photos <ExternalLink size={15} />
-              </a>
+              {photoSettings?.safari_gallery_url ? (
+                <a href={photoSettings.safari_gallery_url} target="_blank" rel="noreferrer">Open Safari Photos <ExternalLink size={15} /></a>
+              ) : (
+                <p>Safari photo folder will be added in Admin.</p>
+              )}
             </div>
           </article>
         </div>

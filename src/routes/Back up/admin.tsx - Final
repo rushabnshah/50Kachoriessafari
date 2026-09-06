@@ -1037,35 +1037,14 @@ function AdminPage() {
 
           <main className="admin-page">
       <section className="admin-dashboard">
-       <div className="safari-topbar">
-  <div>
-    <p className="admin-eyebrow">50 Kachoris Safari</p>
-    <h1>Admin Dashboard</h1>
-    <p className="safari-muted">Manage your safari from one place.</p>
-  </div>
-
-  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-    <a
-      href="/"
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '6px',
-        padding: '10px 14px',
-        border: '1px solid rgba(0,0,0,.12)',
-        borderRadius: '8px',
-        textDecoration: 'none',
-        fontWeight: 700,
-      }}
-    >
-      🎉 Back to Party Website
-    </a>
-
-    <button className="safari-signout" onClick={handleSignOut}>
-      Sign out
-    </button>
-  </div>
-</div>
+        <div className="safari-topbar">
+          <div>
+            <p className="admin-eyebrow">50 Kachoris Safari</p>
+            <h1>Admin Dashboard</h1>
+            <p className="safari-muted">Manage your safari from one place.</p>
+          </div>
+          <button className="safari-signout" onClick={handleSignOut}>Sign out</button>
+        </div>
 
         <div className="safari-stats">
           <div className="safari-stat"><div className="safari-stat-label">Travellers</div><div className="safari-stat-value">{travellers.length || '—'}</div></div>
