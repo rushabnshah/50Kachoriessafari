@@ -180,6 +180,7 @@ function AdminPage() {
         loadTravellers()
         loadVehicles()
         loadRooms()
+        loadPhotoSettings()
       }
     })
 
@@ -194,6 +195,7 @@ function AdminPage() {
         loadTravellers()
         loadVehicles()
         loadRooms()
+        loadPhotoSettings()
       }
     })
 
