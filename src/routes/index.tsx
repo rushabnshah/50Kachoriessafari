@@ -370,6 +370,7 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
   const [photoSettings, setPhotoSettings] = useState<PhotoSettings | null>(null)
   const [lantanaIndex, setLantanaIndex] = useState(0)
   const [selectedDayIndex, setSelectedDayIndex] = useState(0)
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, started: false })
 
   useEffect(() => {
     let active = true
@@ -404,6 +405,31 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
     return () => {
       active = false
     }
+  }, [])
+
+  useEffect(() => {
+    const target = new Date('2026-10-24T18:00:00+03:00').getTime()
+
+    const updateCountdown = () => {
+      const difference = target - Date.now()
+      if (difference <= 0) {
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0, started: true })
+        return
+      }
+
+      const totalSeconds = Math.floor(difference / 1000)
+      setCountdown({
+        days: Math.floor(totalSeconds / 86400),
+        hours: Math.floor((totalSeconds % 86400) / 3600),
+        minutes: Math.floor((totalSeconds % 3600) / 60),
+        seconds: totalSeconds % 60,
+        started: false,
+      })
+    }
+
+    updateCountdown()
+    const timer = window.setInterval(updateCountdown, 1000)
+    return () => window.clearInterval(timer)
   }, [])
 
   useEffect(() => {
@@ -457,7 +483,8 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
     <main className="party-page">
       <style>{`
         .party-page{--gold:#d7a84e;--gold2:#f0cc79;--ink:#0c0c0b;background:#0b0b0a;color:#f7f0e5;min-height:100vh;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-        .party-toolbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:flex-end;gap:20px;padding:12px 28px;background:rgba(8,8,7,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(240,204,121,.18)}
+        .party-toolbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:11px clamp(18px,4vw,54px);background:rgba(8,8,7,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(240,204,121,.18)}
+        .party-anchor-nav{display:flex;align-items:center;gap:24px}.party-anchor-nav a{color:rgba(255,255,255,.72);font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;transition:color .2s ease}.party-anchor-nav a:hover{color:var(--gold2)}
         .party-toolbar .brand{display:none}.party-switches{display:flex;gap:8px}.party-switch{border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;padding:10px 16px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer}.party-switch.active{background:var(--gold);color:#15120d;border-color:var(--gold)}
         .eyebrow{margin:0 0 8px;text-transform:uppercase;letter-spacing:.18em;font-size:.72rem;font-weight:800;color:var(--gold2)}
         .party-host-hero{position:relative;min-height:clamp(600px,43vw,700px);overflow:hidden;border-bottom:1px solid rgba(240,204,121,.28);background-color:#090908;background-image:linear-gradient(90deg,rgba(5,5,4,.96) 0%,rgba(5,5,4,.86) 22%,rgba(5,5,4,.62) 42%,rgba(5,5,4,.28) 62%,rgba(5,5,4,.08) 82%,rgba(5,5,4,.02) 100%),url("/assets/party/hero-galu-sunset-dark.jpg");background-size:cover;background-position:center center;background-repeat:no-repeat}.party-hero-logo-overlay{position:absolute;z-index:2;left:63%;top:54%;right:auto;transform:translate(-50%,-50%);width:min(32vw,455px);max-height:82%;display:flex;align-items:center;justify-content:center;pointer-events:none}.party-hero-logo-overlay img{display:block;width:100%;height:auto;max-height:570px;object-fit:contain;filter:drop-shadow(0 10px 24px rgba(0,0,0,.72)) drop-shadow(0 0 8px rgba(214,168,78,.16))}.party-host-copy{position:relative;z-index:3;min-height:inherit;width:min(680px,52%);max-width:680px;padding:clamp(54px,6vw,88px) clamp(34px,6vw,92px);display:flex;flex-direction:column;justify-content:center;background:linear-gradient(90deg,rgba(7,7,6,.94) 0%,rgba(7,7,6,.72) 52%,rgba(7,7,6,.18) 82%,transparent 100%)}.party-host-copy h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(3.1rem,5vw,5.3rem);font-weight:400;font-style:normal;line-height:.98;margin:0 0 22px;letter-spacing:-.035em;color:#f0cc79;text-shadow:0 3px 22px rgba(0,0,0,.5)}.party-host-copy h1:after{content:"";display:block;width:190px;height:1px;margin-top:22px;background:linear-gradient(90deg,#d7a84e,rgba(215,168,78,.08))}.party-host-copy p{max-width:600px;color:rgba(255,255,255,.94);line-height:1.72;font-size:1.02rem;font-family:Georgia,"Times New Roman",serif}.party-host-copy .party-host-lede{font-family:Georgia,"Times New Roman",serif;font-size:1.08rem;font-style:normal;color:rgba(255,255,255,.94);line-height:1.62;margin-bottom:2px}.host-signoff{margin-top:16px;line-height:1.65;font-family:Georgia,"Times New Roman",serif;color:#f0cc79;font-size:1rem}.host-signoff em{font-style:italic;color:rgba(255,255,255,.9)}.host-signoff strong{display:inline-block;margin-top:3px;font-family:Georgia,"Times New Roman",serif;font-size:1.18rem;font-weight:600;letter-spacing:.075em;color:#f0cc79;text-shadow:0 2px 12px rgba(0,0,0,.5)}.party-host-meta{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:24px;padding-top:16px;border-top:1px solid rgba(240,204,121,.28);font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.82)}
@@ -472,13 +499,21 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
         @media(max-width:900px){.party-hero-logo-overlay{left:62%;width:min(42vw,360px);top:50%}.party-host-copy{width:min(680px,58%)}.party-toolbar{padding:10px 18px}.party-host-hero{min-height:720px;background-position:center top}.party-hero-logo-overlay{width:min(62vw,430px);right:4%;top:29%;opacity:.94}.party-host-copy{width:72%;max-width:680px;min-height:720px;padding:330px 34px 48px;background:linear-gradient(180deg,rgba(7,7,6,.06) 0%,rgba(7,7,6,.78) 43%,rgba(7,7,6,.97) 66%)}}
         @media(max-width:560px){.party-toolbar{padding:10px 14px}.party-switches{width:100%;justify-content:flex-end}.party-host-hero{min-height:760px;background-position:center top}.party-hero-logo-overlay{width:78vw;right:11%;top:23%;opacity:.9}.party-host-copy{width:100%;min-height:760px;padding:340px 22px 44px;background:linear-gradient(180deg,rgba(7,7,6,.04) 0%,rgba(7,7,6,.72) 43%,rgba(7,7,6,.98) 65%)}.party-host-copy h1{font-size:3.3rem}.party-host-copy .party-host-lede{font-size:1.05rem}}
         @media(max-width:900px){.party-toolbar{align-items:flex-start;flex-direction:column}.party-switches{width:100%;justify-content:flex-start}.party-location-grid{grid-template-columns:1fr}.party-section{padding:58px 18px}.party-section-heading{display:block}.party-section-heading>p{margin-top:14px}.party-day-detail{grid-template-columns:1fr}.party-room-grid{grid-template-columns:repeat(2,1fr)}.party-bottom-links{grid-template-columns:1fr}.party-bottom-links-three{grid-template-columns:1fr}.party-location-carousel,.party-location-carousel img{min-height:360px}.day-detail-panel{height:clamp(210px,31vw,300px)}.day-detail-content{min-height:600px}}
-        @media(max-width:560px){.party-hero-logo-overlay{left:50%;top:25%;width:62vw;max-height:290px}.party-host-hero{min-height:760px;background-position:center top}.party-host-copy{width:100%;min-height:760px;padding:340px 22px 44px;background:linear-gradient(180deg,rgba(7,7,6,.02) 0%,rgba(7,7,6,.56) 42%,rgba(7,7,6,.96) 64%)}.party-host-copy h1{font-size:3.25rem}.party-host-copy .party-host-lede{font-size:1.02rem}.party-host-copy p{font-size:.98rem}.party-meta-strip{grid-template-columns:1fr}.party-meta-strip div{border-right:0;border-bottom:1px solid rgba(240,204,121,.16)}.party-host-copy{padding:48px 22px;min-height:600px}.party-host-copy h1{font-size:4rem}.day-tabs{grid-template-columns:1fr}.day-tab{border-right:0;border-bottom:1px solid #dfcfb6}.day-tab:last-child{border-bottom:0}.day-detail-panel{height:210px;border-radius:14px}.day-detail-content{padding:38px 24px;min-height:620px}.day-detail-content h3{font-size:3.4rem}.party-room-grid{grid-template-columns:1fr}.party-photo-grid{grid-template-columns:repeat(2,1fr)}.day-modal-media{height:250px}.day-modal-scroll{max-height:calc(92vh - 250px)}.day-modal-copy{padding:26px 22px 34px}.day-detail-row{flex-direction:column;gap:4px}.day-detail-row strong{text-align:left}}
+        @media(max-width:820px){.party-anchor-nav{display:none}.party-toolbar{justify-content:flex-end}.party-practical-grid{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:560px){.countdown-grid{grid-template-columns:repeat(2,1fr)}.countdown-unit:nth-child(2){border-right:0}.countdown-unit:nth-child(-n+2){border-bottom:1px solid rgba(240,204,121,.16)}.party-practical{padding:64px 22px}.party-practical-grid{grid-template-columns:1fr;margin-top:28px}.party-practical-grid article{padding:20px}.party-scroll-cue{margin-top:10px}.party-hero-logo-overlay{left:50%;top:25%;width:62vw;max-height:290px}.party-host-hero{min-height:760px;background-position:center top}.party-host-copy{width:100%;min-height:760px;padding:340px 22px 44px;background:linear-gradient(180deg,rgba(7,7,6,.02) 0%,rgba(7,7,6,.56) 42%,rgba(7,7,6,.96) 64%)}.party-host-copy h1{font-size:3.25rem}.party-host-copy .party-host-lede{font-size:1.02rem}.party-host-copy p{font-size:.98rem}.party-meta-strip{grid-template-columns:1fr}.party-meta-strip div{border-right:0;border-bottom:1px solid rgba(240,204,121,.16)}.party-host-copy{padding:48px 22px;min-height:600px}.party-host-copy h1{font-size:4rem}.day-tabs{grid-template-columns:1fr}.day-tab{border-right:0;border-bottom:1px solid #dfcfb6}.day-tab:last-child{border-bottom:0}.day-detail-panel{height:210px;border-radius:14px}.day-detail-content{padding:38px 24px;min-height:620px}.day-detail-content h3{font-size:3.4rem}.party-room-grid{grid-template-columns:1fr}.party-photo-grid{grid-template-columns:repeat(2,1fr)}.day-modal-media{height:250px}.day-modal-scroll{max-height:calc(92vh - 250px)}.day-modal-copy{padding:26px 22px 34px}.day-detail-row{flex-direction:column;gap:4px}.day-detail-row strong{text-align:left}}
       `}</style>
 
       <header className="party-toolbar">
+        <nav className="party-anchor-nav" aria-label="Party sections">
+          <a href="#top">Welcome</a>
+          <a href="#weekend">The Weekend</a>
+          <a href="#galu">Lantana</a>
+          <a href="#rooms">Rooms</a>
+          <a href="#memories">Photos</a>
+        </nav>
         <div className="party-switches">
-          <button className="party-switch active" type="button">🎉 50 Kachoris – The Party</button>
-          <button className="party-switch" type="button" onClick={onSafari}>🦁 50 Kachoris – The Safari</button>
+          <button className="party-switch active" type="button" aria-current="page">PARTY</button>
+          <button className="party-switch" type="button" onClick={onSafari}>SAFARI</button>
         </div>
       </header>
 
@@ -491,15 +526,31 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
           <p>We’ve put together three unforgettable nights at Lantana Galu Beach, and we can’t wait to share them with you. Come ready to celebrate, laugh, dance and make some incredible memories together.</p>
           <p className="host-signoff"><em>With love,</em><br /><strong>Jinal · Nishil · Jinesh</strong></p>
           <div className="party-host-meta"><span>24–26 October 2026</span><span>Lantana Galu Beach</span><span>Kenya</span></div>
+          <a className="party-scroll-cue" href="#weekend">↓ Explore the weekend</a>
         </div>
         
       </section>
 
-
+      <section className="party-countdown" aria-label="Countdown to the party">
+        <p className="eyebrow">The countdown is on</p>
+        {countdown.started ? (
+          <h2>The party has started.</h2>
+        ) : (
+          <div className="countdown-grid">
+            {([['days', countdown.days, 'Days'], ['hours', countdown.hours, 'Hours'], ['minutes', countdown.minutes, 'Minutes'], ['seconds', countdown.seconds, 'Seconds']] as const).map(([key, value, label]) => (
+              <div className="countdown-unit" key={key}>
+                <strong>{String(value).padStart(2, '0')}</strong>
+                <span>{label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <p className="countdown-note">Until the first celebration · Saturday 24 October 2026</p>
+      </section>
 
       <section className="party-section" id="weekend">
         <div className="party-section-heading">
-          <div><p className="eyebrow">The celebration</p><h2>Three Nights at Lantana</h2></div>
+          <div><p className="eyebrow">The celebration</p><h2>Three days. Three moods.</h2></div><p>One unforgettable weekend — from Kenyan roots to the rave, then a relaxed Bollywood wind down.</p>
         </div>
         <div className="day-tabs" role="tablist" aria-label="Party nights">
           {displayPartyEvents.map((event, index) => {
@@ -547,64 +598,66 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
 
       <section className="party-section" id="rooms">
         <div className="party-section-heading">
-          <div><p className="eyebrow">81 provisional guests · 40 rooms</p><h2>Find Your Room</h2></div>
-          <p>Search by room number or name. This is the provisional rooming list and can be updated later as arrangements are confirmed.</p>
+          <div><p className="eyebrow">Your accommodation</p><h2>Where are you staying?</h2></div>
+          <p>Search by your name or room number to see your room and who you’re sharing with.</p>
         </div>
         <PartyRooming />
       </section>
 
-      <section className="party-section" id="party-links">
+      <section className="party-section" id="memories">
+        <div className="party-section-heading">
+          <div><p className="eyebrow">The memories</p><h2>Keep the good times</h2></div>
+          <p>We’ll share the photographs from the celebrations here. Bring your phone, bring your camera, and add your favourite moments.</p>
+        </div>
         <div className="party-bottom-links party-bottom-links-three">
           <div className="party-bottom-card party-bottom-card-action">
-            <div className="party-bottom-icon">🛏️</div><p className="eyebrow">Accommodation</p><h3>Find Your Room</h3><p>See your room details and who you're sharing with.</p>
+            <div className="party-bottom-icon">🛏️</div><p className="eyebrow">Accommodation</p><h3>Find Your Room</h3><p>See your room details and who you’re sharing with.</p>
             <a className="party-button" href="#rooms">View rooms</a>
           </div>
           <div className="party-bottom-card party-bottom-card-action">
             <div className="party-bottom-icon">📷</div>
             <p className="eyebrow">Share the memories</p>
             <h3>Party Photos</h3>
-            <p>View the photos from the celebrations and add your own memories to the shared Google Photos album.</p>
+            <p>View the celebrations and add your own memories to the shared Google Photos album.</p>
             {photoSettings?.party_gallery_url ? (
               <div className="party-photo-upload">
-                <a
-                  className="party-button"
-                  href={photoSettings.party_gallery_url}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  📷 View &amp; Add Photos <ExternalLink size={15} />
-                </a>
+                <a className="party-button" href={photoSettings.party_gallery_url} target="_blank" rel="noreferrer">📷 View &amp; Add Photos <ExternalLink size={15} /></a>
               </div>
-            ) : (
-              <div className="party-photo-upload">
-                <span className="party-button party-photo-disabled" aria-disabled="true">
-                  📷 View &amp; Add Photos
-                </span>
-                <p className="party-photo-placeholder">Party Google Photos link will be added in Admin.</p>
-              </div>
-            )}
+            ) : null}
           </div>
           <div className="party-bottom-card party-bottom-card-action">
-            <div className="party-bottom-icon">📖</div><p className="eyebrow">For a bit of fun</p><h3>The Mongo Register</h3><p>See the full tongue-in-cheek register and all the classic entries.</p>
+            <div className="party-bottom-icon">📖</div><p className="eyebrow">For a bit of fun</p><h3>The Mongo Register</h3><p>The official record of questionable decisions and classic entries.</p>
             <a className="party-button" href="/assets/party/mongo-register.jpg" target="_blank" rel="noreferrer">View the register <ExternalLink size={15} /></a>
           </div>
         </div>
-
       </section>
 
-     <footer>
+      <section className="party-practical" id="before-you-arrive">
+        <div className="party-practical-inner">
+          <div>
+            <p className="eyebrow">Before you arrive</p>
+            <h2>Everything you need for the weekend.</h2>
+          </div>
+          <div className="party-practical-grid">
+            <article><span>📍</span><strong>Where</strong><p>Lantana Galu Beach, Kenya</p></article>
+            <article><span>📅</span><strong>When</strong><p>24–26 October 2026</p></article>
+            <article><span>👕</span><strong>Dress</strong><p>A different theme for each celebration</p></article>
+            <article><span>🛏️</span><strong>Rooms</strong><p>Check your allocation above</p></article>
+            <article><span>📸</span><strong>Photos</strong><p>Shared albums will be updated throughout the celebrations</p></article>
+            <article><span>🎉</span><strong>The plan</strong><p>Come ready to celebrate, laugh, dance and make memories</p></article>
+          </div>
+        </div>
+      </section>
+
+     <footer className="party-footer">
   <div>
     <span className="brand-mark">🎉</span>
-    <strong>50 Kachoris – The Party</strong>
+    <strong>50 Kachoris</strong>
   </div>
-
-  <p>Jinal · Nishil · Jinesh · 50th birthday celebrations</p>
-
+  <p>Three friends · Fifty years · One unforgettable weekend</p>
   <div className="footer-links">
     <a href="#top">Back to top ↑</a>
-    <a href="/admin" aria-label="Admin login">
-      🔒 Admin Login
-    </a>
+    <a href="/admin" aria-label="Admin login">🔒 Admin Login</a>
   </div>
 </footer>
     </main>
