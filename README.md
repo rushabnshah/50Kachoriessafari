@@ -1,6 +1,6 @@
-# Taita Hills 2026 Family Safari Hub
+# 50 Kachoris Party Hub
 
-A responsive family trip website for the Group Shah safari to Taita Hills Wildlife Sanctuary from 28–30 October 2026. The site keeps the itinerary, lodge information, room assignments, and payment requests in one easy-to-share place.
+The site keeps the itinerary, lodge information, room assignments, and payment requests in one easy-to-share place.
 
 ## Key Features
 
