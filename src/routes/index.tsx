@@ -417,18 +417,17 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
         return
       }
 
-      const totalSeconds = Math.floor(difference / 1000)
       setCountdown({
-        days: Math.floor(totalSeconds / 86400),
-        hours: Math.floor((totalSeconds % 86400) / 3600),
-        minutes: Math.floor((totalSeconds % 3600) / 60),
-        seconds: totalSeconds % 60,
+        days: Math.ceil(difference / 86400000),
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
         started: false,
       })
     }
 
     updateCountdown()
-    const timer = window.setInterval(updateCountdown, 1000)
+    const timer = window.setInterval(updateCountdown, 60000)
     return () => window.clearInterval(timer)
   }, [])
 
@@ -483,15 +482,15 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
     <main className="party-page">
       <style>{`
         .party-page{--gold:#d7a84e;--gold2:#f0cc79;--ink:#0c0c0b;background:#0b0b0a;color:#f7f0e5;min-height:100vh;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-        .party-toolbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:11px clamp(18px,4vw,54px);background:rgba(8,8,7,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(240,204,121,.18)}
-        .party-anchor-nav{display:flex;align-items:center;gap:24px}.party-anchor-nav a{color:rgba(255,255,255,.72);font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;transition:color .2s ease}.party-anchor-nav a:hover{color:var(--gold2)}
-        .party-toolbar .brand{display:none}.party-switches{display:flex;gap:8px}.party-switch{border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;padding:10px 16px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer}.party-switch.active{background:var(--gold);color:#15120d;border-color:var(--gold)}
+        .party-toolbar{position:sticky;top:0;z-index:100;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:22px;padding:10px clamp(18px,4vw,54px);background:rgba(8,8,7,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(240,204,121,.18)}
+        .party-anchor-nav{display:flex;align-items:center;gap:24px;min-width:0}.party-anchor-nav a{color:rgba(255,255,255,.72);font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;transition:color .2s ease}.party-anchor-nav a:hover{color:var(--gold2)}
+        .party-toolbar .brand{display:none}.party-toolbar-countdown{display:flex;align-items:baseline;justify-content:center;gap:7px;padding:5px 16px;border-left:1px solid rgba(240,204,121,.22);border-right:1px solid rgba(240,204,121,.22);white-space:nowrap}.party-toolbar-countdown strong{font-family:Georgia,serif;font-size:1.25rem;line-height:1;color:var(--gold2);font-weight:400}.party-toolbar-countdown span{font-size:.63rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.82)}.party-toolbar-countdown.started strong{font-size:.75rem;font-family:inherit;font-weight:800;letter-spacing:.12em}.party-switches{display:flex;gap:8px;justify-self:end}.party-switch{border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;padding:9px 15px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer}.party-switch.active{background:var(--gold);color:#15120d;border-color:var(--gold)}
         .eyebrow{margin:0 0 8px;text-transform:uppercase;letter-spacing:.18em;font-size:.72rem;font-weight:800;color:var(--gold2)}
         .party-host-hero{position:relative;min-height:clamp(600px,43vw,700px);overflow:hidden;border-bottom:1px solid rgba(240,204,121,.28);background-color:#090908;background-image:linear-gradient(90deg,rgba(5,5,4,.96) 0%,rgba(5,5,4,.86) 22%,rgba(5,5,4,.62) 42%,rgba(5,5,4,.28) 62%,rgba(5,5,4,.08) 82%,rgba(5,5,4,.02) 100%),url("/assets/party/hero-galu-sunset-dark.jpg");background-size:cover;background-position:center center;background-repeat:no-repeat}.party-hero-logo-overlay{position:absolute;z-index:2;left:63%;top:54%;right:auto;transform:translate(-50%,-50%);width:min(32vw,455px);max-height:82%;display:flex;align-items:center;justify-content:center;pointer-events:none}.party-hero-logo-overlay img{display:block;width:100%;height:auto;max-height:570px;object-fit:contain;filter:drop-shadow(0 10px 24px rgba(0,0,0,.72)) drop-shadow(0 0 8px rgba(214,168,78,.16))}.party-host-copy{position:relative;z-index:3;min-height:inherit;width:min(680px,52%);max-width:680px;padding:clamp(54px,6vw,88px) clamp(34px,6vw,92px);display:flex;flex-direction:column;justify-content:center;background:linear-gradient(90deg,rgba(7,7,6,.94) 0%,rgba(7,7,6,.72) 52%,rgba(7,7,6,.18) 82%,transparent 100%)}.party-host-copy h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(3.1rem,5vw,5.3rem);font-weight:400;font-style:normal;line-height:.98;margin:0 0 22px;letter-spacing:-.035em;color:#f0cc79;text-shadow:0 3px 22px rgba(0,0,0,.5)}.party-host-copy h1:after{content:"";display:block;width:190px;height:1px;margin-top:22px;background:linear-gradient(90deg,#d7a84e,rgba(215,168,78,.08))}.party-host-copy p{max-width:600px;color:rgba(255,255,255,.94);line-height:1.72;font-size:1.02rem;font-family:Georgia,"Times New Roman",serif}.party-host-copy .party-host-lede{font-family:Georgia,"Times New Roman",serif;font-size:1.08rem;font-style:normal;color:rgba(255,255,255,.94);line-height:1.62;margin-bottom:2px}.host-signoff{margin-top:16px;line-height:1.65;font-family:Georgia,"Times New Roman",serif;color:#f0cc79;font-size:1rem}.host-signoff em{font-style:italic;color:rgba(255,255,255,.9)}.host-signoff strong{display:inline-block;margin-top:3px;font-family:Georgia,"Times New Roman",serif;font-size:1.18rem;font-weight:600;letter-spacing:.075em;color:#f0cc79;text-shadow:0 2px 12px rgba(0,0,0,.5)}.party-host-meta{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:24px;padding-top:16px;border-top:1px solid rgba(240,204,121,.28);font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.82)}
 .party-50-logo-wrap{display:none}
 .party-meta-strip{display:grid;grid-template-columns:repeat(3,1fr);background:#0e0e0c;border-bottom:1px solid rgba(240,204,121,.2)}.party-meta-strip div{text-align:center;padding:18px 14px;border-right:1px solid rgba(240,204,121,.16)}.party-meta-strip div:last-child{border-right:0}.party-meta-strip strong{display:block;color:var(--gold2);font-family:Georgia,serif;font-size:1.2rem}.party-meta-strip span{display:block;margin-top:4px;color:rgba(255,255,255,.62);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em}
         .party-section{padding:76px clamp(22px,5vw,80px);max-width:1380px;margin:0 auto}.party-section-heading{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:30px}.party-section-heading h2{font-family:Georgia,serif;font-size:clamp(2.2rem,4vw,4rem);line-height:.95;margin:0;color:#fff}.party-section-heading>p{max-width:540px;color:rgba(255,255,255,.68);line-height:1.7;margin:0}
-        .day-tabs{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid rgba(240,204,121,.42);border-radius:18px;overflow:hidden;background:#f7efe2;margin-bottom:22px}.day-tab{border:0;border-right:1px solid #dfcfb6;background:#f7efe2;color:#222;padding:18px 16px;cursor:pointer;font:inherit;transition:.2s}.day-tab:last-child{border-right:0}.day-tab strong{display:block;font-family:Georgia,serif;font-size:1.05rem}.day-tab span{display:block;margin-top:5px;color:#777;font-size:.82rem}.day-tab.active{background:linear-gradient(135deg,#e8c77f,#f7ead0);color:#15120d}.day-detail-panel{position:relative;width:100%;height:clamp(220px,23vw,340px);border:0;border-radius:18px;overflow:hidden;background:#111;box-shadow:0 18px 50px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center}.day-detail-bg{position:absolute;inset:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;overflow:hidden}.day-detail-bg img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.012)}.day-detail-content{display:none}.day-detail-date,.day-detail-content h3,.day-detail-content .dj,.day-detail-content p,.day-detail-grid,.day-detail-box{display:none}.day-theme-roots{background:#10261b;color:#fff}.day-theme-rave{background:#180b22;color:#fff}.day-theme-bollywood{background:#3a111b;color:#fff}.photo-viewer-backdrop{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:24px}.photo-viewer{position:relative;width:min(1100px,96vw);height:min(86vh,800px);display:grid;place-items:center}.photo-viewer img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 25px 90px rgba(0,0,0,.7)}.photo-viewer-close{position:absolute;right:0;top:-46px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;cursor:pointer}.photo-viewer-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid var(--gold);background:rgba(0,0,0,.7);color:var(--gold2);display:grid;place-items:center;cursor:pointer}.photo-viewer-nav.prev{left:-58px}.photo-viewer-nav.next{right:-58px}
+        .day-tabs{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid rgba(240,204,121,.42);border-radius:18px;overflow:hidden;background:#f7efe2;margin-bottom:22px}.day-tab{border:0;border-right:1px solid #dfcfb6;background:#f7efe2;color:#222;padding:18px 16px;cursor:pointer;font:inherit;transition:.2s}.day-tab:last-child{border-right:0}.day-tab strong{display:block;font-family:Georgia,serif;font-size:1.05rem}.day-tab span{display:block;margin-top:5px;color:#777;font-size:.82rem}.day-tab.active{background:linear-gradient(135deg,#e8c77f,#f7ead0);color:#15120d}.day-detail-panel{position:relative;width:100%;aspect-ratio:1536/337;height:auto;border:0;border-radius:18px;overflow:hidden;background:#111;box-shadow:0 18px 50px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center}.day-detail-bg{position:absolute;inset:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;overflow:hidden}.day-detail-bg img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;transform:none}.day-detail-content{display:none}.day-detail-date,.day-detail-content h3,.day-detail-content .dj,.day-detail-content p,.day-detail-grid,.day-detail-box{display:none}.day-theme-roots{background:#10261b;color:#fff}.day-theme-rave{background:#180b22;color:#fff}.day-theme-bollywood{background:#3a111b;color:#fff}.photo-viewer-backdrop{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:24px}.photo-viewer{position:relative;width:min(1100px,96vw);height:min(86vh,800px);display:grid;place-items:center}.photo-viewer img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 25px 90px rgba(0,0,0,.7)}.photo-viewer-close{position:absolute;right:0;top:-46px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;cursor:pointer}.photo-viewer-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid var(--gold);background:rgba(0,0,0,.7);color:var(--gold2);display:grid;place-items:center;cursor:pointer}.photo-viewer-nav.prev{left:-58px}.photo-viewer-nav.next{right:-58px}
 .party-location-grid{display:grid;grid-template-columns:.85fr 1.15fr;min-height:520px;border:1px solid rgba(240,204,121,.28);border-radius:24px;overflow:hidden;box-shadow:0 24px 65px rgba(0,0,0,.32)}.party-location-copy{padding:clamp(30px,5vw,64px);display:flex;flex-direction:column;justify-content:center;background:linear-gradient(145deg,#0f1f18,#173d2c)}.party-location-copy h2{font-family:Georgia,serif;font-size:clamp(2.4rem,4.4vw,4.6rem);line-height:.94;margin:0 0 18px;color:#fff}.party-location-copy p{color:rgba(255,255,255,.78);line-height:1.8}.party-location-copy .party-button{margin-top:16px;width:max-content}.party-location-carousel{position:relative;min-height:520px;background:#111;overflow:hidden}.party-location-carousel img{width:100%;height:100%;min-height:520px;object-fit:cover;display:block}.party-location-carousel:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.22),transparent 45%,rgba(0,0,0,.12));pointer-events:none}.party-image-controls{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;pointer-events:none;z-index:4}.party-image-controls button{pointer-events:auto;width:46px;height:46px;border-radius:50%;border:1px solid var(--gold);background:rgba(0,0,0,.58);color:var(--gold2);display:grid;place-items:center;cursor:pointer}.party-image-caption{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:60px 24px 20px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.78));font-weight:700}.party-image-dots{position:absolute;z-index:5;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:7px}.party-image-dots button{width:8px;height:8px;padding:0;border:1px solid rgba(255,255,255,.8);border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer}.party-image-dots button.active{width:24px;border-radius:999px;background:var(--gold)}
         .party-rooming{background:#11100e;border:1px solid rgba(240,204,121,.22);border-radius:20px;overflow:hidden}.party-rooming-head{padding:22px;display:flex;gap:16px;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(240,204,121,.16)}.party-rooming-search{min-width:260px;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:11px 15px;font:inherit;background:#191815;color:#fff}.party-room-grid{display:grid;grid-template-columns:repeat(4,1fr)}.party-room{padding:17px 20px;border-bottom:1px solid rgba(255,255,255,.08);border-right:1px solid rgba(255,255,255,.08)}.party-room strong{display:block;color:var(--gold2);margin-bottom:6px}.party-room span{display:block;line-height:1.45;color:rgba(255,255,255,.86)}.party-room-count{opacity:.55;font-size:.78rem;margin-top:5px}.party-button{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--gold);border-radius:999px;padding:12px 18px;background:var(--gold);color:#16120b;font-weight:800;cursor:pointer;font:inherit;text-decoration:none}.party-button:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.2)}.photo-share-card{display:flex;align-items:flex-start;gap:22px}.photo-share-card>svg{flex:0 0 auto;color:var(--gold2)}.photo-share-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;margin-top:14px;padding:12px 20px;border:1px solid var(--gold);border-radius:999px;background:var(--gold);color:#16120b;font-weight:800;text-decoration:none;transition:transform .2s ease,box-shadow .2s ease}.photo-share-button:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.22)}.party-photo-disabled{opacity:.45;cursor:not-allowed;pointer-events:none}.photo-share-placeholder,.party-photo-placeholder{display:block;margin-top:14px;color:rgba(255,255,255,.55);font-size:.9rem}.party-button.secondary{background:transparent;color:#fff}.party-bottom-links{display:grid;grid-template-columns:1fr 1fr;gap:18px}.party-bottom-card{padding:28px;border:1px solid rgba(240,204,121,.25);border-radius:20px;background:#11100e}.party-bottom-card h3{font-family:Georgia,serif;font-size:1.8rem;margin:0 0 8px}.party-bottom-card p{color:rgba(255,255,255,.68);line-height:1.6}.party-photo-upload{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}.party-upload-label{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:var(--gold);color:#16120b;font-weight:800;cursor:pointer}.party-upload-label input{display:none}.party-photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}.party-photo-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;display:block}.party-photo-empty{margin-top:20px;padding:28px;border:1px dashed rgba(240,204,121,.3);border-radius:16px;text-align:center;color:rgba(255,255,255,.6)}
         .day-theme-roots{background:linear-gradient(135deg,#0d3021,#163d2c);color:#fff}.day-theme-rave{background:linear-gradient(135deg,#22052f,#5b0c61);color:#fff}.day-theme-bollywood{background:linear-gradient(135deg,#5d1021,#8e2735);color:#fff}.day-modal-backdrop{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.78);display:grid;place-items:center;padding:20px}.day-modal{width:min(980px,100%);max-height:92vh;overflow:hidden;border-radius:24px;position:relative;box-shadow:0 30px 90px rgba(0,0,0,.6)}.day-modal-media{height:330px;position:relative;overflow:hidden}.day-modal-media img{width:100%;height:100%;object-fit:cover;display:block}.day-modal-media-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.86),rgba(0,0,0,.05) 70%)}.day-modal-title{position:absolute;left:38px;right:70px;bottom:28px;color:#fff}.day-modal-title p{margin:0 0 8px;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem;font-weight:800;opacity:.82}.day-modal-title h2{font-family:Georgia,serif;font-size:clamp(2.4rem,6vw,5rem);line-height:.92;margin:0}.day-modal-scroll{max-height:calc(92vh - 330px);overflow-y:auto}.day-modal-copy{padding:34px 40px 44px}.day-modal-copy h3{margin:28px 0 10px;font-size:1.1rem;text-transform:uppercase;letter-spacing:.08em}.day-modal p{max-width:760px;line-height:1.8;font-size:1.05rem}.day-detail-row{display:flex;justify-content:space-between;gap:18px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.16)}.day-detail-row span{font-size:.75rem;letter-spacing:.12em;font-weight:800;opacity:.68}.day-detail-row strong{text-align:right}.day-dress{padding:20px 22px;border:1px solid rgba(255,255,255,.25);border-radius:16px;background:rgba(0,0,0,.18);line-height:1.7}.day-modal-close{position:absolute;right:18px;top:18px;z-index:10;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;cursor:pointer}
@@ -499,8 +498,544 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
         @media(max-width:900px){.party-hero-logo-overlay{left:62%;width:min(42vw,360px);top:50%}.party-host-copy{width:min(680px,58%)}.party-toolbar{padding:10px 18px}.party-host-hero{min-height:720px;background-position:center top}.party-hero-logo-overlay{width:min(62vw,430px);right:4%;top:29%;opacity:.94}.party-host-copy{width:72%;max-width:680px;min-height:720px;padding:330px 34px 48px;background:linear-gradient(180deg,rgba(7,7,6,.06) 0%,rgba(7,7,6,.78) 43%,rgba(7,7,6,.97) 66%)}}
         @media(max-width:560px){.party-toolbar{padding:10px 14px}.party-switches{width:100%;justify-content:flex-end}.party-host-hero{min-height:760px;background-position:center top}.party-hero-logo-overlay{width:78vw;right:11%;top:23%;opacity:.9}.party-host-copy{width:100%;min-height:760px;padding:340px 22px 44px;background:linear-gradient(180deg,rgba(7,7,6,.04) 0%,rgba(7,7,6,.72) 43%,rgba(7,7,6,.98) 65%)}.party-host-copy h1{font-size:3.3rem}.party-host-copy .party-host-lede{font-size:1.05rem}}
         @media(max-width:900px){.party-toolbar{align-items:flex-start;flex-direction:column}.party-switches{width:100%;justify-content:flex-start}.party-location-grid{grid-template-columns:1fr}.party-section{padding:58px 18px}.party-section-heading{display:block}.party-section-heading>p{margin-top:14px}.party-day-detail{grid-template-columns:1fr}.party-room-grid{grid-template-columns:repeat(2,1fr)}.party-bottom-links{grid-template-columns:1fr}.party-bottom-links-three{grid-template-columns:1fr}.party-location-carousel,.party-location-carousel img{min-height:360px}.day-detail-panel{height:clamp(210px,31vw,300px)}.day-detail-content{min-height:600px}}
-        @media(max-width:820px){.party-anchor-nav{display:none}.party-toolbar{justify-content:flex-end}.party-practical-grid{grid-template-columns:repeat(2,1fr)}}
-        @media(max-width:560px){.countdown-grid{grid-template-columns:repeat(2,1fr)}.countdown-unit:nth-child(2){border-right:0}.countdown-unit:nth-child(-n+2){border-bottom:1px solid rgba(240,204,121,.16)}.party-practical{padding:64px 22px}.party-practical-grid{grid-template-columns:1fr;margin-top:28px}.party-practical-grid article{padding:20px}.party-scroll-cue{margin-top:10px}.party-hero-logo-overlay{left:50%;top:25%;width:62vw;max-height:290px}.party-host-hero{min-height:760px;background-position:center top}.party-host-copy{width:100%;min-height:760px;padding:340px 22px 44px;background:linear-gradient(180deg,rgba(7,7,6,.02) 0%,rgba(7,7,6,.56) 42%,rgba(7,7,6,.96) 64%)}.party-host-copy h1{font-size:3.25rem}.party-host-copy .party-host-lede{font-size:1.02rem}.party-host-copy p{font-size:.98rem}.party-meta-strip{grid-template-columns:1fr}.party-meta-strip div{border-right:0;border-bottom:1px solid rgba(240,204,121,.16)}.party-host-copy{padding:48px 22px;min-height:600px}.party-host-copy h1{font-size:4rem}.day-tabs{grid-template-columns:1fr}.day-tab{border-right:0;border-bottom:1px solid #dfcfb6}.day-tab:last-child{border-bottom:0}.day-detail-panel{height:210px;border-radius:14px}.day-detail-content{padding:38px 24px;min-height:620px}.day-detail-content h3{font-size:3.4rem}.party-room-grid{grid-template-columns:1fr}.party-photo-grid{grid-template-columns:repeat(2,1fr)}.day-modal-media{height:250px}.day-modal-scroll{max-height:calc(92vh - 250px)}.day-modal-copy{padding:26px 22px 34px}.day-detail-row{flex-direction:column;gap:4px}.day-detail-row strong{text-align:left}}
+        @media(max-width:820px){.party-anchor-nav{display:flex}.party-toolbar{justify-content:flex-end}.party-practical-grid{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:560px){party-practical{padding:64px 22px}.party-practical-grid{grid-template-columns:1fr;margin-top:28px}.party-practical-grid article{padding:20px}.party-scroll-cue{margin-top:10px}.party-hero-logo-overlay{left:50%;top:25%;width:62vw;max-height:290px}.party-host-hero{min-height:760px;background-position:center top}.party-host-copy{width:100%;min-height:760px;padding:340px 22px 44px;background:linear-gradient(180deg,rgba(7,7,6,.02) 0%,rgba(7,7,6,.56) 42%,rgba(7,7,6,.96) 64%)}.party-host-copy h1{font-size:3.25rem}.party-host-copy .party-host-lede{font-size:1.02rem}.party-host-copy p{font-size:.98rem}.party-meta-strip{grid-template-columns:1fr}.party-meta-strip div{border-right:0;border-bottom:1px solid rgba(240,204,121,.16)}.party-host-copy{padding:48px 22px;min-height:600px}.party-host-copy h1{font-size:4rem}.day-tabs{grid-template-columns:1fr}.day-tab{border-right:0;border-bottom:1px solid #dfcfb6}.day-tab:last-child{border-bottom:0}.day-detail-panel{height:210px;border-radius:14px}.day-detail-content{padding:38px 24px;min-height:620px}.day-detail-content h3{font-size:3.4rem}.party-room-grid{grid-template-columns:1fr}.party-photo-grid{grid-template-columns:repeat(2,1fr)}.day-modal-media{height:250px}.day-modal-scroll{max-height:calc(92vh - 250px)}.day-modal-copy{padding:26px 22px 34px}.day-detail-row{flex-direction:column;gap:4px}.day-detail-row strong{text-align:left}}
+
+        
+        .party-practical{padding:84px clamp(22px,5vw,80px);background:#0e0e0c;border-top:1px solid rgba(240,204,121,.16);border-bottom:1px solid rgba(240,204,121,.16)}.party-practical-inner{max-width:1380px;margin:0 auto}.party-practical-heading{max-width:700px;margin-bottom:34px}.party-practical-heading h2{font-family:Georgia,serif;font-weight:400;font-size:clamp(2.2rem,4vw,3.8rem);line-height:.98;margin:0;color:#fff}.party-practical-heading>p:last-child{margin:14px 0 0;color:rgba(255,255,255,.62);line-height:1.7}.party-practical-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.party-practical-grid article{display:flex;align-items:flex-start;gap:16px;min-height:128px;padding:24px;border:1px solid rgba(240,204,121,.18);border-radius:16px;background:linear-gradient(145deg,#151512,#10100e);box-shadow:0 14px 35px rgba(0,0,0,.16);transition:transform .2s ease,border-color .2s ease}.party-practical-grid article:hover{transform:translateY(-2px);border-color:rgba(240,204,121,.36)}.party-practical-grid article>span{font-size:1.45rem;line-height:1}.party-practical-grid article strong{display:block;color:var(--gold2);font-size:.78rem;text-transform:uppercase;letter-spacing:.14em}.party-practical-grid article p{margin:8px 0 0;color:rgba(255,255,255,.78);line-height:1.55;font-size:.92rem}.party-footer{display:grid;grid-template-columns:1.3fr 1fr auto;align-items:center;gap:32px;padding:34px clamp(22px,5vw,80px);background:#080807;border-top:1px solid rgba(240,204,121,.22);color:#fff}.party-footer-brand{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center}.party-footer-brand .brand-mark{grid-row:span 2;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#16150f}.party-footer-brand strong{font-family:Georgia,serif;font-size:1.15rem;color:#fff}.party-footer-tagline{grid-column:2;color:rgba(255,255,255,.48);font-size:.72rem;margin-top:3px}.party-footer-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:18px}.party-footer-nav a,.party-footer-actions a{color:rgba(255,255,255,.66);font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;transition:color .2s ease}.party-footer-nav a:hover,.party-footer-actions a:hover{color:var(--gold2)}.party-footer-actions{display:flex;flex-direction:column;align-items:flex-end;gap:10px}.party-footer-actions a:last-child{color:var(--gold2)}
+        @media(max-width:900px){.party-toolbar{grid-template-columns:minmax(0,1fr) auto;gap:14px}.party-anchor-nav{overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.party-anchor-nav::-webkit-scrollbar{display:none}.party-toolbar-countdown{justify-self:center}.party-footer{grid-template-columns:1fr;text-align:center;gap:22px}.party-footer-brand{justify-content:center;text-align:left}.party-footer-nav{justify-content:center}.party-footer-actions{align-items:center}.party-practical-grid{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:560px){.party-toolbar{grid-template-columns:1fr auto;gap:10px;padding:9px 14px}.party-anchor-nav{grid-column:1 / -1;gap:18px;width:100%}.party-anchor-nav a{font-size:.61rem}.party-toolbar-countdown{grid-column:1;grid-row:2;justify-self:start;padding:4px 11px}.party-toolbar-countdown strong{font-size:1rem}.party-toolbar-countdown span{font-size:.54rem}.party-switches{grid-column:2;grid-row:2}.party-switch{padding:7px 11px;font-size:.72rem}.party-practical{padding:64px 22px}.party-practical-grid{grid-template-columns:1fr;gap:10px}.party-practical-grid article{min-height:0;padding:20px}.party-footer{padding:30px 22px}.party-footer-nav{gap:12px 16px}.party-footer-nav a,.party-footer-actions a{font-size:.62rem}}
+
+        /* Final Party polish */
+        .party-section-heading{margin-bottom:34px}.party-section-heading h2{letter-spacing:-.025em}.party-section-heading>p{font-family:Georgia,serif;font-size:1rem}
+        .day-tabs{margin-bottom:18px;border-radius:16px;background:#15130f;border-color:rgba(240,204,121,.28);padding:5px;gap:5px;overflow:visible}.day-tab{border:0!important;border-radius:12px;background:transparent;color:rgba(255,255,255,.72);padding:16px 18px;text-align:left}.day-tab:hover{background:rgba(240,204,121,.07);color:#fff}.day-tab.active{background:linear-gradient(135deg,#e8c77f,#f7ead0);color:#15120d;box-shadow:0 8px 25px rgba(0,0,0,.22)}.day-tab-date{display:block;font-size:.65rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;opacity:.72}.day-tab strong{display:block;margin-top:5px;font-family:Georgia,serif;font-size:1.18rem;letter-spacing:.01em}.day-tab-hint{display:block;margin-top:5px;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;opacity:.52}.day-tab.active .day-tab-date,.day-tab.active .day-tab-hint{opacity:.7}
+        .day-detail-panel{height:auto;aspect-ratio:auto;border-radius:20px;box-shadow:0 22px 65px rgba(0,0,0,.32);background:#111}.day-detail-bg{position:relative;inset:auto;width:100%;height:auto;overflow:hidden}.day-detail-bg img{display:block;width:100%;height:auto;max-width:100%;object-fit:contain;object-position:center}.day-detail-panel:after{content:"";position:absolute;inset:0;border:1px solid rgba(255,255,255,.07);border-radius:inherit;pointer-events:none}
+        .party-location-grid{min-height:560px}.party-location-copy{background:linear-gradient(145deg,#11130f,#19392a)}.party-location-copy h2{letter-spacing:-.03em}.party-location-carousel,.party-location-carousel img{min-height:560px}
+        .party-bottom-links-three{grid-template-columns:repeat(3,1fr);gap:18px}.party-bottom-card{min-height:300px;display:flex;flex-direction:column;align-items:flex-start}.party-bottom-card .party-button{margin-top:auto}.party-bottom-icon{width:48px;height:48px;display:grid;place-items:center;border:1px solid rgba(240,204,121,.25);border-radius:50%;background:#17150f;margin-bottom:20px}.party-bottom-card h3{font-family:Georgia,serif;font-size:1.7rem;font-weight:400;color:#fff;margin:0 0 10px}.party-bottom-card>p:not(.eyebrow){color:rgba(255,255,255,.66);line-height:1.65;margin:0 0 18px}
+        .party-practical{background:linear-gradient(180deg,#0d0d0b,#10100e);padding-top:88px;padding-bottom:88px}.party-practical-heading{max-width:760px}.party-practical-heading h2{letter-spacing:-.025em}.party-practical-grid{grid-template-columns:repeat(3,1fr);gap:16px}.party-practical-grid article{min-height:145px;padding:25px;background:linear-gradient(145deg,#161511,#10100e)}.party-practical-grid article>span{width:42px;height:42px;display:grid;place-items:center;border:1px solid rgba(240,204,121,.2);border-radius:50%;background:#12110e;flex:0 0 42px}
+        .party-footer{grid-template-columns:minmax(260px,1.4fr) minmax(280px,1fr) auto;gap:45px;padding:56px clamp(22px,5vw,80px);background:#070706}.party-footer-main .eyebrow{margin-bottom:10px}.party-footer-main h2{font-family:Georgia,serif;font-size:clamp(1.7rem,2.4vw,2.5rem);line-height:1.08;font-weight:400;color:#f0cc79;margin:0;max-width:560px}.party-footer-main>p:last-child{margin:14px 0 0;color:rgba(255,255,255,.45);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}.party-footer-nav{justify-content:flex-start;gap:12px 22px}.party-footer-actions{align-items:flex-end;white-space:nowrap}
+        @media(max-width:900px){.day-detail-panel{height:auto;aspect-ratio:auto}.party-location-grid{min-height:0}.party-location-carousel,.party-location-carousel img{min-height:420px}.party-bottom-links-three{grid-template-columns:1fr}.party-bottom-card{min-height:240px}.party-footer{grid-template-columns:1fr;gap:26px}.party-footer-nav{justify-content:flex-start}.party-footer-actions{align-items:flex-start}}
+        @media(max-width:560px){.day-tabs{grid-template-columns:1fr;gap:4px;padding:4px}.day-tab{padding:13px 15px}.day-tab strong{font-size:1.05rem}.day-tab-hint{display:none}.day-detail-panel{height:auto;aspect-ratio:16/9;border-radius:14px}.day-detail-bg{position:absolute;inset:0;height:100%}.day-detail-bg img{width:100%;height:100%;object-fit:contain}.party-location-carousel,.party-location-carousel img{min-height:320px}.party-bottom-card{min-height:0;padding:24px}.party-practical{padding:64px 18px}.party-practical-grid{grid-template-columns:1fr;gap:10px}.party-practical-grid article{min-height:0;padding:20px}.party-footer{padding:42px 22px}.party-footer-main h2{font-size:1.8rem}.party-footer-nav{gap:12px 18px}}
+      
+        @media(max-width:820px){.party-anchor-nav{display:flex;overflow-x:auto;white-space:nowrap;scrollbar-width:none}.party-anchor-nav::-webkit-scrollbar{display:none}}
+
+        /* Final party-page polish */
+        .party-host-kicker{margin:0 0 18px;color:var(--gold2);font-size:.7rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+        .party-host-copy{padding-top:clamp(60px,7vw,104px);padding-bottom:clamp(60px,7vw,104px)}
+        .party-host-copy h1{max-width:640px}
+        .party-host-copy .party-host-lede{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.15rem,1.55vw,1.42rem);line-height:1.55;color:#f3e5c7;max-width:600px}
+        .party-host-copy>p:not(.party-host-lede):not(.host-signoff){max-width:570px;color:rgba(255,255,255,.76)}
+        .party-host-meta{margin-top:22px}
+        .party-scroll-cue{margin-top:24px;border-bottom:1px solid rgba(240,204,121,.35);padding-bottom:6px;width:max-content}
+
+        .party-section{position:relative}
+        .party-section-heading{padding-bottom:4px}
+        .party-section-heading .eyebrow{margin-bottom:10px}
+        .party-section-heading h2{letter-spacing:-.035em}
+        #weekend.party-section{padding-top:88px;padding-bottom:92px}
+        #weekend.party-section:before{content:"";position:absolute;left:clamp(22px,5vw,80px);right:clamp(22px,5vw,80px);top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(240,204,121,.32),transparent)}
+        .day-tabs{background:#11100e;border-color:rgba(240,204,121,.3);box-shadow:0 12px 35px rgba(0,0,0,.2)}
+        .day-tab{background:#11100e;color:#fff;border-color:rgba(255,255,255,.08);min-height:112px;text-align:left;padding:20px 18px}
+        .day-tab-date{font-size:.68rem!important;font-weight:800;letter-spacing:.17em;text-transform:uppercase;color:rgba(255,255,255,.42)!important}
+        .day-tab strong{font-size:1.08rem;margin-top:10px;color:#fff}
+        .day-tab-hint{font-size:.68rem!important;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.32)!important}
+        .day-tab.active{background:linear-gradient(135deg,#ead09a,#f5e4bd);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+        .day-tab.active .day-tab-date,.day-tab.active .day-tab-hint{color:rgba(20,17,12,.52)!important}
+        .day-tab.active strong{color:#17130d}
+        .day-detail-panel{border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.38);background:#050505}
+        .day-detail-bg{background:#050505}
+        .day-detail-bg img{object-fit:contain}
+
+        #galu.party-section{padding-top:86px;padding-bottom:96px}
+        .party-location-grid{min-height:0;grid-template-columns:.8fr 1.2fr;border-color:rgba(240,204,121,.25);box-shadow:0 25px 70px rgba(0,0,0,.28)}
+        .party-location-copy{padding:clamp(34px,5vw,70px)}
+        .party-location-copy h2{font-size:clamp(2.5rem,4vw,4.3rem)}
+        .party-location-copy .eyebrow{margin-bottom:10px}
+        .party-location-carousel{min-height:560px}
+        .party-location-carousel img{min-height:560px}
+
+        #rooms.party-section{padding-top:86px;padding-bottom:86px}
+        #rooms .party-rooming{box-shadow:0 20px 55px rgba(0,0,0,.22)}
+        #rooms .party-section-heading>p{font-size:.96rem}
+
+        #memories.party-section{padding-top:88px;padding-bottom:96px}
+        .party-bottom-links-three{grid-template-columns:repeat(3,1fr);gap:16px}
+        .party-bottom-card{min-height:270px;padding:30px;display:flex;flex-direction:column;align-items:flex-start;background:linear-gradient(145deg,#151411,#0f0f0d);border-color:rgba(240,204,121,.22);box-shadow:0 18px 45px rgba(0,0,0,.2);transition:transform .22s ease,border-color .22s ease,background .22s ease}
+        .party-bottom-card:hover{transform:translateY(-4px);border-color:rgba(240,204,121,.46);background:linear-gradient(145deg,#1a1813,#11110e)}
+        .party-bottom-card h3{font-size:1.75rem}
+        .party-bottom-card .party-button{margin-top:auto}
+        .party-bottom-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:50%;background:#1d1a13;border:1px solid rgba(240,204,121,.22);font-size:1.25rem;margin-bottom:20px}
+        .party-practical{padding-top:86px;padding-bottom:86px}
+        .party-practical-heading{margin-bottom:30px}
+        .party-practical-grid article{min-height:116px}
+        .party-footer{padding-top:48px;padding-bottom:48px}
+        .party-footer-main h2{font-family:Georgia,serif;font-weight:400;line-height:1.08}
+
+        @media(max-width:900px){
+          .party-host-copy{padding-top:52px;padding-bottom:52px}
+          .party-location-grid{grid-template-columns:1fr}
+          .party-location-carousel,.party-location-carousel img{min-height:420px}
+          .party-bottom-links-three{grid-template-columns:1fr}
+          .party-bottom-card{min-height:220px}
+        }
+        @media(max-width:820px){
+          .party-anchor-nav{display:flex;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+          .party-anchor-nav::-webkit-scrollbar{display:none}
+          #weekend.party-section,#galu.party-section,#rooms.party-section,#memories.party-section{padding-top:68px;padding-bottom:72px}
+        }
+        @media(max-width:560px){
+          .party-host-kicker{font-size:.62rem;letter-spacing:.16em}
+          .party-host-copy h1{font-size:3.25rem}
+          .party-host-copy .party-host-lede{font-size:1.08rem}
+          .day-tab{min-height:92px;padding:16px}
+          .day-detail-panel{border-radius:14px}
+          .party-location-carousel,.party-location-carousel img{min-height:300px}
+          .party-bottom-card{padding:24px}
+        }
+
+
+
+        /* Final usability + responsive polish */
+        html{scroll-behavior:smooth;scroll-padding-top:72px}
+        .party-page a,.party-page button{transition:color .2s ease,background-color .2s ease,border-color .2s ease,transform .2s ease,box-shadow .2s ease}
+        .party-anchor-nav{scrollbar-width:none}
+        .party-anchor-nav::-webkit-scrollbar{display:none}
+        .party-section[id]{scroll-margin-top:72px}
+        .party-bottom-card-action{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;min-height:270px}
+        .party-bottom-card-action:after{content:"";position:absolute;right:-70px;bottom:-95px;width:190px;height:190px;border:1px solid rgba(240,204,121,.12);border-radius:50%;pointer-events:none}
+        .party-bottom-card-action .party-button{margin-top:auto}
+        .party-bottom-card-action:hover{border-color:rgba(240,204,121,.48);transform:translateY(-3px);box-shadow:0 18px 45px rgba(0,0,0,.22)}
+        .party-bottom-icon{font-size:1.7rem;margin-bottom:18px;filter:grayscale(.15)}
+        .party-practical-grid article{transition:transform .2s ease,border-color .2s ease,background-color .2s ease}
+        .party-practical-grid article:hover{transform:translateY(-2px);border-color:rgba(240,204,121,.35);background:rgba(255,255,255,.035)}
+        .party-location-copy .party-button{align-self:flex-start}
+        .party-image-controls button:hover{transform:scale(1.06);background:rgba(0,0,0,.78)}
+        .day-tab:hover:not(.active){background:#efe5d5}
+        .party-scroll-cue:hover{transform:translateX(4px)}
+
+        @media(max-width:1100px){
+          .party-toolbar{gap:14px;padding-left:22px;padding-right:22px}
+          .party-anchor-nav{gap:15px}
+          .party-anchor-nav a{font-size:.66rem;letter-spacing:.09em}
+          .party-host-copy{width:min(700px,58%)}
+          .party-hero-logo-overlay{left:67%;width:min(30vw,390px)}
+        }
+        @media(max-width:900px){
+          .party-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"nav switches" "countdown countdown";gap:9px 14px;padding-top:10px;padding-bottom:10px}
+          .party-anchor-nav{grid-area:nav;min-width:0;overflow-x:auto;padding-bottom:2px}
+          .party-switches{grid-area:switches}
+          .party-toolbar-countdown{grid-area:countdown;width:max-content;justify-self:center}
+          .party-host-hero{min-height:650px;background-position:center center}
+          .party-host-copy{width:62%;padding-left:36px;padding-right:32px}
+          .party-hero-logo-overlay{left:72%;width:min(28vw,330px)}
+          .party-location-grid{min-height:0}
+          .party-location-carousel,.party-location-carousel img{min-height:440px}
+        }
+        @media(max-width:560px){
+          html{scroll-padding-top:108px}
+          .party-toolbar{grid-template-columns:1fr auto;grid-template-areas:"nav nav" "countdown switches";padding:9px 14px}
+          .party-anchor-nav{gap:18px;width:100%;padding:2px 2px 6px}
+          .party-anchor-nav a{font-size:.61rem;letter-spacing:.075em}
+          .party-switches{justify-self:end}
+          .party-switch{padding:8px 12px;font-size:.68rem}
+          .party-toolbar-countdown{justify-self:start;border-left:0;padding-left:2px;padding-right:12px}
+          .party-host-hero{min-height:650px;background-position:60% top}
+          .party-hero-logo-overlay{left:72%;top:23%;width:54vw;opacity:.95}
+          .party-host-copy{width:100%;padding:290px 22px 40px;background:linear-gradient(180deg,rgba(7,7,6,.02) 0%,rgba(7,7,6,.58) 40%,rgba(7,7,6,.96) 62%,rgba(7,7,6,.99) 100%)}
+          .party-host-copy h1{font-size:clamp(3rem,13vw,4rem)}
+          .party-host-copy p{font-size:.96rem;line-height:1.65}
+          .party-host-meta{gap:8px 15px;font-size:.63rem}
+          .party-section{padding-left:18px;padding-right:18px}
+          .day-detail-panel{aspect-ratio:1536/337;height:auto;min-height:0}
+          .day-detail-bg{position:relative;inset:auto;width:100%;height:auto;aspect-ratio:1536/337}
+          .day-detail-bg img{width:100%;height:100%;object-fit:contain}
+          .party-location-carousel,.party-location-carousel img{min-height:300px;height:300px}
+          .party-bottom-card-action{min-height:240px}
+          .party-practical{padding-left:18px;padding-right:18px}
+        }
+
+
+
+        /* Mobile refinement — keep all rules inside the component style block */
+        @media(max-width:560px){
+          html,body,#root{max-width:100%;overflow-x:hidden}
+          .party-page{width:100%;overflow-x:hidden}
+          .party-toolbar{position:sticky;top:0;z-index:100;display:grid;grid-template-columns:1fr auto;grid-template-areas:"nav nav" "countdown switches";gap:8px;padding:9px 12px 10px}
+          .party-anchor-nav{grid-area:nav;display:flex!important;width:100%;overflow-x:auto;gap:20px;padding:1px 2px 5px;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+          .party-anchor-nav::-webkit-scrollbar{display:none}
+          .party-anchor-nav a{font-size:.58rem;letter-spacing:.10em;flex:0 0 auto}
+          .party-toolbar-countdown{grid-area:countdown;justify-self:start;border-left:0;padding:4px 0}
+          .party-toolbar-countdown strong{font-size:1rem}
+          .party-toolbar-countdown span{font-size:.52rem}
+          .party-switches{grid-area:switches;justify-self:end;align-self:center}
+          .party-switch{min-height:32px;padding:6px 10px;font-size:.62rem;letter-spacing:.02em}
+
+          /* Compact hero: keep the 50 mark higher and to the right so the welcome message starts sooner. */
+          .party-host-hero{min-height:0;height:auto;background-position:center top;background-size:auto 520px;background-repeat:no-repeat}
+          .party-hero-logo-overlay{position:absolute;left:auto;right:7%;top:34px;transform:none;width:min(48vw,205px);max-height:none}
+          .party-hero-logo-overlay img{width:100%;max-height:none}
+          .party-host-copy{width:100%;min-height:0;padding:225px 22px 42px;background:linear-gradient(180deg,rgba(7,7,6,0) 0%,rgba(7,7,6,.18) 24%,rgba(7,7,6,.84) 50%,rgba(7,7,6,.99) 67%,rgba(7,7,6,1) 100%)}
+          .party-host-copy h1{font-size:clamp(2.9rem,13vw,3.6rem);line-height:.98;margin-bottom:18px;letter-spacing:-.04em}
+          .party-host-copy h1:after{width:145px;margin-top:18px}
+          .party-host-copy .party-host-lede{font-size:1rem;line-height:1.55}
+          .party-host-copy p{font-size:.94rem;line-height:1.62}
+          .party-host-meta{display:none}
+
+          .party-section{width:100%;box-sizing:border-box;padding:56px 18px}
+          .party-section-heading{margin-bottom:22px}
+          .party-section-heading h2{font-size:2.3rem;line-height:1.02}
+          .party-section-heading>p{margin-top:12px;font-size:.96rem;line-height:1.6}
+
+          /* All three dates stay visible without horizontal scrolling. */
+          .day-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;margin-bottom:14px;overflow:hidden;border-radius:14px}
+          .day-tab{min-width:0;min-height:90px;padding:13px 7px;border-radius:10px;text-align:center}
+          .day-tab-date{font-size:.49rem;letter-spacing:.07em;white-space:nowrap}
+          .day-tab strong{margin-top:5px;font-size:.76rem;line-height:1.12}
+          .day-tab-hint{display:none}
+
+          /* Make the wide invitation genuinely readable on a phone: show it larger and let guests swipe across it rather than shrinking it to a tiny strip. */
+          .day-detail-panel{height:200px!important;aspect-ratio:auto;border-radius:12px;overflow:hidden;position:relative}
+          .day-detail-bg{position:absolute!important;inset:0!important;width:100%;height:100%!important;aspect-ratio:auto;overflow-x:auto;overflow-y:hidden;background:#090909;display:flex;align-items:center;justify-content:flex-start;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+          .day-detail-bg::-webkit-scrollbar{display:none}
+          .day-detail-bg img{width:auto!important;height:200px!important;max-width:none!important;object-fit:contain!important;display:block;flex:0 0 auto}
+          .day-detail-panel:before{content:"Swipe to view invitation →";position:absolute;right:8px;bottom:8px;z-index:5;padding:5px 7px;border-radius:999px;background:rgba(0,0,0,.72);color:rgba(255,255,255,.9);font-size:.5rem;letter-spacing:.04em;text-transform:uppercase;pointer-events:none}
+
+          .party-location-grid{display:flex;flex-direction:column;min-height:0}
+          .party-location-copy{padding:28px 22px}
+          .party-location-copy h2{font-size:2.4rem}
+          .party-location-copy p{font-size:.94rem;line-height:1.62}
+          .party-location-copy .party-button{width:100%;justify-content:center}
+          .party-location-carousel,.party-location-carousel img{min-height:300px;height:300px}
+
+          .party-room-grid,.party-bottom-links-three,.party-practical-grid{grid-template-columns:1fr!important}
+          .party-bottom-card,.party-bottom-card-action{min-height:0;padding:24px!important}
+          .party-bottom-card h3{font-size:1.5rem}
+          .party-practical{padding:56px 18px!important}
+          .party-practical-grid{gap:10px}
+          .party-practical-grid article{min-height:0;padding:20px}
+
+          .party-footer{display:flex!important;flex-direction:column;align-items:center;text-align:center;gap:22px;padding:38px 20px}
+          .party-footer-brand{display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center}
+          .party-footer-nav{display:grid;grid-template-columns:repeat(2,1fr);width:100%;max-width:280px;gap:14px 20px}
+          .party-footer-actions{align-items:center}
+        }
+
+
+          /* Mobile invitation details: keep the artwork visual, then provide the full readable invitation copy below it. */
+          .day-detail-mobile-content{display:none}
+          @media(max-width:560px){
+            .party-hero-logo-overlay{
+              left:50%;
+              right:auto;
+              top:12px;
+              transform:translateX(-50%);
+              width:min(50vw,205px);
+              max-width:205px;
+            }
+            .party-hero-logo-overlay img{width:100%;height:auto;max-height:none}
+            .party-host-copy{padding-top:205px}
+
+            .day-detail-panel{
+              height:auto!important;
+              aspect-ratio:auto!important;
+              overflow:hidden;
+              border-radius:14px;
+              background:#0d0d0b;
+            }
+            .day-detail-bg{
+              position:relative!important;
+              inset:auto!important;
+              width:100%!important;
+              height:220px!important;
+              min-height:220px!important;
+              aspect-ratio:auto!important;
+              overflow-x:auto!important;
+              overflow-y:hidden!important;
+              display:flex!important;
+              align-items:center!important;
+              justify-content:flex-start!important;
+              background:#090909;
+              -webkit-overflow-scrolling:touch;
+              scrollbar-width:none;
+            }
+            .day-detail-bg::-webkit-scrollbar{display:none}
+            .day-detail-bg img{
+              width:auto!important;
+              height:220px!important;
+              max-width:none!important;
+              object-fit:contain!important;
+              object-position:center!important;
+              display:block!important;
+              flex:0 0 auto!important;
+            }
+            .day-detail-panel:before{
+              content:"Swipe to view invitation →";
+              position:absolute;
+              right:8px;
+              top:194px;
+              bottom:auto;
+              z-index:5;
+              padding:5px 7px;
+              border-radius:999px;
+              background:rgba(0,0,0,.72);
+              color:rgba(255,255,255,.9);
+              font-size:.5rem;
+              letter-spacing:.04em;
+              text-transform:uppercase;
+              pointer-events:none;
+            }
+            .day-detail-mobile-content{
+              display:block!important;
+              position:relative;
+              padding:24px 20px 28px;
+              background:linear-gradient(180deg,#11110f 0%,#0b0b0a 100%);
+              border-top:1px solid rgba(240,204,121,.16);
+            }
+            .day-detail-mobile-content .day-detail-date{
+              display:block!important;
+              margin:0 0 8px;
+              color:rgba(255,255,255,.48);
+              font-size:.62rem;
+              font-weight:800;
+              letter-spacing:.16em;
+              text-transform:uppercase;
+            }
+            .day-detail-mobile-content h3{
+              display:block!important;
+              margin:0 0 5px;
+              color:#f0cc79;
+              font-family:Georgia,"Times New Roman",serif;
+              font-size:1.8rem;
+              line-height:1.05;
+              font-weight:400;
+            }
+            .day-detail-mobile-content .dj{
+              display:block!important;
+              margin:0 0 14px;
+              color:#b9df75;
+              font-size:.78rem;
+              font-weight:800;
+              text-transform:uppercase;
+              letter-spacing:.1em;
+            }
+            .day-detail-mobile-content .day-detail-intro{
+              display:block!important;
+              margin:0 0 16px;
+              color:rgba(255,255,255,.8);
+              font-size:.93rem;
+              line-height:1.62;
+            }
+            .day-detail-mobile-content .day-detail-box{
+              display:flex!important;
+              flex-direction:column;
+              gap:5px;
+              margin:4px 0 14px;
+              padding:12px 14px;
+              border-left:2px solid #d7a84e;
+              background:rgba(240,204,121,.05);
+            }
+            .day-detail-mobile-content .day-detail-box strong{
+              display:block!important;
+              color:#f0cc79;
+              font-size:.62rem;
+              letter-spacing:.14em;
+            }
+            .day-detail-mobile-content .day-detail-box span{
+              display:block!important;
+              color:rgba(255,255,255,.78);
+              font-size:.88rem;
+              line-height:1.5;
+            }
+            .day-detail-mobile-content .day-detail-extra{
+              display:block!important;
+              margin:0!important;
+              color:#d9b66a!important;
+              font-family:Georgia,"Times New Roman",serif;
+              font-style:italic;
+              font-size:.88rem!important;
+              line-height:1.55!important;
+            }
+          }
+
+          /* Final mobile invitation layout:
+             show the complete artwork at the page width, with the readable narrative immediately below.
+             No overlay, no horizontal swipe, and no cropping. */
+          @media(max-width:560px){
+            .party-hero-logo-overlay{
+              left:50%!important;
+              right:auto!important;
+              top:8px!important;
+              transform:translateX(-50%)!important;
+              width:155px!important;
+              max-width:155px!important;
+            }
+            .party-hero-logo-overlay img{
+              width:100%!important;
+              height:auto!important;
+            }
+            .party-host-copy{
+              padding-top:175px!important;
+            }
+            .party-host-copy .party-host-kicker{
+              margin:10px 0 14px!important;
+              font-size:.78rem!important;
+              line-height:1.3!important;
+              letter-spacing:.11em!important;
+              white-space:normal!important;
+            }
+
+            .day-detail-panel{
+              display:block!important;
+              height:auto!important;
+              min-height:0!important;
+              aspect-ratio:auto!important;
+              overflow:hidden!important;
+              border-radius:14px!important;
+              background:#0d0d0b!important;
+            }
+            .day-detail-bg{
+              position:relative!important;
+              inset:auto!important;
+              width:100%!important;
+              height:auto!important;
+              min-height:0!important;
+              overflow:visible!important;
+              display:block!important;
+              background:#090909!important;
+            }
+            .day-detail-bg img{
+              display:block!important;
+              width:100%!important;
+              height:auto!important;
+              max-width:100%!important;
+              max-height:none!important;
+              object-fit:contain!important;
+              object-position:center!important;
+            }
+            .day-detail-panel:before{
+              display:none!important;
+              content:none!important;
+            }
+            .day-detail-mobile-content{
+              display:block!important;
+              position:relative!important;
+              padding:20px 20px 24px!important;
+              background:linear-gradient(180deg,#11110f 0%,#0b0b0a 100%)!important;
+              border-top:1px solid rgba(240,204,121,.16)!important;
+            }
+          }
+
+          /* Final mobile invitation treatment: split the original artwork into two readable halves. */
+          .day-detail-mobile-split{display:none}
+          .day-detail-full-image{display:block}
+          @media(max-width:560px){
+            .party-hero-logo-overlay{
+              top:10px!important;
+              left:50%!important;
+              width:190px!important;
+              max-width:190px!important;
+              transform:translateX(-50%)!important;
+              filter:drop-shadow(0 4px 12px rgba(240,204,121,.38)) drop-shadow(0 0 18px rgba(0,0,0,.85));
+              z-index:3!important;
+            }
+            .party-hero-logo-overlay img{width:100%!important;height:auto!important}
+            .party-host-copy{padding-top:205px!important}
+
+            .day-detail-full-image{display:none!important}
+            .day-detail-mobile-split{
+              display:block!important;
+              width:100%;
+              background:#050505;
+            }
+            .day-detail-split-half{
+              position:relative;
+              width:100%;
+              overflow:hidden;
+              background:#050505;
+              line-height:0;
+            }
+            .day-detail-split-half img{
+              display:block;
+              width:200%!important;
+              max-width:none!important;
+              height:auto!important;
+              object-fit:contain!important;
+            }
+            .day-detail-split-left img{transform:translateX(0)}
+            .day-detail-split-right img{transform:translateX(-50%)}
+            .day-detail-mobile-content{display:none!important}
+            .day-detail-panel{
+              border-radius:14px!important;
+              overflow:hidden!important;
+              background:#050505!important;
+            }
+          }
+
+          /* Final mobile invitation: show ONLY the two halves of the original artwork.
+             The full-width desktop artwork is completely removed on phones. */
+          .day-detail-mobile-split{display:none!important}
+          @media(max-width:560px){
+            .party-hero-logo-overlay{
+              left:50%!important;
+              right:auto!important;
+              top:8px!important;
+              transform:translateX(-50%)!important;
+              width:175px!important;
+              max-width:175px!important;
+              z-index:5!important;
+              filter:drop-shadow(0 5px 14px rgba(240,204,121,.55)) drop-shadow(0 0 22px rgba(0,0,0,.9))!important;
+            }
+            .party-host-copy{
+              padding-top:198px!important;
+            }
+            .party-host-copy .party-host-kicker{
+              margin-top:10px!important;
+            }
+
+            .day-detail-bg{
+              display:none!important;
+            }
+            .day-detail-mobile-split{
+              display:block!important;
+              width:100%!important;
+              background:#050505!important;
+              overflow:hidden!important;
+            }
+            .day-detail-split-half{
+              display:block!important;
+              position:relative!important;
+              width:100%!important;
+              height:auto!important;
+              overflow:hidden!important;
+              background:#050505!important;
+              line-height:0!important;
+            }
+            .day-detail-split-half img{
+              display:block!important;
+              width:200%!important;
+              max-width:none!important;
+              height:auto!important;
+              object-fit:fill!important;
+              flex:none!important;
+            }
+            .day-detail-split-left img{
+              transform:translateX(0)!important;
+            }
+            .day-detail-split-right img{
+              transform:translateX(-50%)!important;
+            }
+            .day-detail-mobile-content{
+              display:none!important;
+            }
+            .day-detail-panel{
+              height:auto!important;
+              min-height:0!important;
+              aspect-ratio:auto!important;
+              overflow:hidden!important;
+              border-radius:14px!important;
+              background:#050505!important;
+            }
+          }
       `}</style>
 
       <header className="party-toolbar">
@@ -511,6 +1046,16 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
           <a href="#rooms">Rooms</a>
           <a href="#memories">Photos</a>
         </nav>
+        <div className={`party-toolbar-countdown${countdown.started ? ' started' : ''}`} aria-label="Countdown to the first celebration">
+          {countdown.started ? (
+            <span>The party has started</span>
+          ) : (
+            <>
+              <strong>{countdown.days}</strong>
+              <span>DAYS TO GO</span>
+            </>
+          )}
+        </div>
         <div className="party-switches">
           <button className="party-switch active" type="button" aria-current="page">PARTY</button>
           <button className="party-switch" type="button" onClick={onSafari}>SAFARI</button>
@@ -521,6 +1066,7 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
         <div className="party-hero-logo-overlay" aria-hidden="true"><img src="/assets/party/party-50-logo-transparent.png" alt="" /></div>
         <div className="party-host-copy">
           <h1>Welcome to our 50th</h1>
+          <p className="party-host-kicker">KENYA · 24–26 OCTOBER 2026</p>
           <p className="party-host-lede">We can’t wait to celebrate this very special milestone with all of you.</p>
           <p>What better way to mark our 50th birthdays than by bringing everyone together in Kenya — surrounded by family, friends, sunshine, music and plenty of good food?</p>
           <p>We’ve put together three unforgettable nights at Lantana Galu Beach, and we can’t wait to share them with you. Come ready to celebrate, laugh, dance and make some incredible memories together.</p>
@@ -531,32 +1077,15 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
         
       </section>
 
-      <section className="party-countdown" aria-label="Countdown to the party">
-        <p className="eyebrow">The countdown is on</p>
-        {countdown.started ? (
-          <h2>The party has started.</h2>
-        ) : (
-          <div className="countdown-grid">
-            {([['days', countdown.days, 'Days'], ['hours', countdown.hours, 'Hours'], ['minutes', countdown.minutes, 'Minutes'], ['seconds', countdown.seconds, 'Seconds']] as const).map(([key, value, label]) => (
-              <div className="countdown-unit" key={key}>
-                <strong>{String(value).padStart(2, '0')}</strong>
-                <span>{label}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        <p className="countdown-note">Until the first celebration · Saturday 24 October 2026</p>
-      </section>
-
       <section className="party-section" id="weekend">
         <div className="party-section-heading">
-          <div><p className="eyebrow">The celebration</p><h2>Three days. Three moods.</h2></div><p>One unforgettable weekend — from Kenyan roots to the rave, then a relaxed Bollywood wind down.</p>
+          <div><p className="eyebrow">The celebration</p><h2>The Weekend</h2></div><p>Three days. Three moods. One unforgettable weekend — from Kenyan roots to the rave, then a relaxed Bollywood wind down.</p>
         </div>
         <div className="day-tabs" role="tablist" aria-label="Party nights">
           {displayPartyEvents.map((event, index) => {
             const theme = themeForEvent(event)
             const label = index === 0 ? '24 October' : index === 1 ? '25 October' : '26 October'
-            return <button key={event.id} className={`day-tab ${index === selectedDayIndex ? 'active' : ''}`} type="button" role="tab" aria-selected={index === selectedDayIndex} onClick={() => setSelectedDayIndex(index)}><strong>{label}</strong><span>{theme.title === 'RETURN TO OUR ROOTS' ? 'Return to Our Roots' : theme.title === 'THE RAVE' ? 'The Rave' : 'The Wind Down'}</span></button>
+            return <button key={event.id} className={`day-tab ${index === selectedDayIndex ? 'active' : ''}`} type="button" role="tab" aria-selected={index === selectedDayIndex} onClick={() => setSelectedDayIndex(index)}><span className="day-tab-date">{label}</span><strong>{theme.title}</strong><span className="day-tab-hint">View invitation</span></button>
           })}
         </div>
         {(() => {
@@ -564,22 +1093,37 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
           const theme = themeForEvent(event)
           return <article className={`day-detail-panel day-theme-${theme.className}`} aria-label={`${theme.title} — ${theme.eyebrow}`}>
             <div className="day-detail-bg">
-              <img src={theme.image} alt={`${theme.title} party artwork`} />
+              <img className="day-detail-full-image" src={theme.image} alt={`${theme.title} party artwork`} />
+            </div>
+            <div className="day-detail-mobile-split" aria-label={`${theme.title} invitation artwork`}>
+              <div className="day-detail-split-half day-detail-split-left"><img src={theme.image} alt="" /></div>
+              <div className="day-detail-split-half day-detail-split-right"><img src={theme.image} alt="" /></div>
+            </div>
+            <div className="day-detail-content day-detail-mobile-content">
+              <p className="day-detail-date">{theme.eyebrow}</p>
+              <h3>{theme.title}</h3>
+              <p className="dj">{theme.dj}</p>
+              <p className="day-detail-intro">{theme.intro}</p>
+              <div className="day-detail-box">
+                <strong>DRESS CODE</strong>
+                <span>{theme.dress}</span>
+              </div>
+              <p className="day-detail-extra">{theme.extra}</p>
             </div>
           </article>
         })()}
       </section>
       <section className="party-section" id="galu">
         <div className="party-section-heading">
-          <div><p className="eyebrow">The setting</p><h2>Lantana Galu Beach</h2></div>
-          <p>Our home for the weekend — beachfront, tropical gardens, warm Indian Ocean water and the perfect setting for the celebrations.</p>
+          <div><p className="eyebrow">The setting</p><h2>Welcome to Lantana</h2></div>
+          <p>Three nights by the Indian Ocean — a beachfront retreat, tropical gardens, warm water and a setting made for celebrating together.</p>
         </div>
         <div className="party-location-grid">
           <div className="party-location-copy">
             <p className="eyebrow">Three nights by the sea</p>
             <h2>Lantana Galu Beach</h2>
             <p>A beautiful beachfront retreat on Galu Beach, with tropical gardens, direct beach access and a relaxed coastal setting.</p>
-            <p>It is where the three nights, the music and the celebrations come together.</p>
+            <p>Between the beach, the gardens and the ocean, Lantana is the backdrop for the whole weekend.</p>
             <a className="party-button" href="https://www.lantana-galu-beach.co.ke/gallery.html" target="_blank" rel="noreferrer">Discover Lantana <ExternalLink size={15} /></a>
           </div>
           <div className="party-location-carousel">
@@ -599,34 +1143,36 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
       <section className="party-section" id="rooms">
         <div className="party-section-heading">
           <div><p className="eyebrow">Your accommodation</p><h2>Where are you staying?</h2></div>
-          <p>Search by your name or room number to see your room and who you’re sharing with.</p>
+          <p>Find your room allocation and see who you’ll be sharing with for the weekend.</p>
         </div>
         <PartyRooming />
       </section>
 
       <section className="party-section" id="memories">
         <div className="party-section-heading">
-          <div><p className="eyebrow">The memories</p><h2>Keep the good times</h2></div>
-          <p>We’ll share the photographs from the celebrations here. Bring your phone, bring your camera, and add your favourite moments.</p>
+          <div><p className="eyebrow">The memories</p><h2>Relive the weekend</h2></div>
+          <p>Safari, sunshine, dancing and questionable decisions. The memories will live here.</p>
         </div>
         <div className="party-bottom-links party-bottom-links-three">
           <div className="party-bottom-card party-bottom-card-action">
-            <div className="party-bottom-icon">🛏️</div><p className="eyebrow">Accommodation</p><h3>Find Your Room</h3><p>See your room details and who you’re sharing with.</p>
-            <a className="party-button" href="#rooms">View rooms</a>
+            <div className="party-bottom-icon">🛏️</div><p className="eyebrow">Your stay</p><h3>Find Your Room</h3><p>Check your allocation and see who you’re sharing with.</p>
+            <a className="party-button" href="#rooms">Find my room</a>
           </div>
           <div className="party-bottom-card party-bottom-card-action">
             <div className="party-bottom-icon">📷</div>
             <p className="eyebrow">Share the memories</p>
             <h3>Party Photos</h3>
-            <p>View the celebrations and add your own memories to the shared Google Photos album.</p>
-            {photoSettings?.party_gallery_url ? (
-              <div className="party-photo-upload">
+            <p>View the celebrations and add your favourite moments to the shared album.</p>
+            <div className="party-photo-upload">
+              {photoSettings?.party_gallery_url ? (
                 <a className="party-button" href={photoSettings.party_gallery_url} target="_blank" rel="noreferrer">📷 View &amp; Add Photos <ExternalLink size={15} /></a>
-              </div>
-            ) : null}
+              ) : (
+                <span className="party-photo-placeholder">The party album link will appear here once it is added.</span>
+              )}
+            </div>
           </div>
           <div className="party-bottom-card party-bottom-card-action">
-            <div className="party-bottom-icon">📖</div><p className="eyebrow">For a bit of fun</p><h3>The Mongo Register</h3><p>The official record of questionable decisions and classic entries.</p>
+            <div className="party-bottom-icon">📖</div><p className="eyebrow">For a bit of fun</p><h3>The Mongo Register</h3><p>The official record of questionable decisions, classic entries and legendary moments.</p>
             <a className="party-button" href="/assets/party/mongo-register.jpg" target="_blank" rel="noreferrer">View the register <ExternalLink size={15} /></a>
           </div>
         </div>
@@ -634,32 +1180,40 @@ function PublicPartyHome({ onSafari }: { onSafari: () => void }) {
 
       <section className="party-practical" id="before-you-arrive">
         <div className="party-practical-inner">
-          <div>
+          <div className="party-practical-heading">
             <p className="eyebrow">Before you arrive</p>
-            <h2>Everything you need for the weekend.</h2>
+            <h2>A few things to know.</h2>
+            <p>The useful bits, all in one place — so you can concentrate on enjoying the weekend.</p>
           </div>
           <div className="party-practical-grid">
-            <article><span>📍</span><strong>Where</strong><p>Lantana Galu Beach, Kenya</p></article>
-            <article><span>📅</span><strong>When</strong><p>24–26 October 2026</p></article>
-            <article><span>👕</span><strong>Dress</strong><p>A different theme for each celebration</p></article>
-            <article><span>🛏️</span><strong>Rooms</strong><p>Check your allocation above</p></article>
-            <article><span>📸</span><strong>Photos</strong><p>Shared albums will be updated throughout the celebrations</p></article>
-            <article><span>🎉</span><strong>The plan</strong><p>Come ready to celebrate, laugh, dance and make memories</p></article>
+            <article><span>📍</span><div><strong>Where</strong><p>Lantana Galu Beach, Kenya</p></div></article>
+            <article><span>📅</span><div><strong>When</strong><p>24–26 October 2026</p></div></article>
+            <article><span>👕</span><div><strong>Dress</strong><p>A different theme for each celebration</p></div></article>
+            <article><span>🛏️</span><div><strong>Rooms</strong><p>Check your allocation above</p></div></article>
+            <article><span>📸</span><div><strong>Photos</strong><p>Shared albums will be updated throughout the celebrations</p></div></article>
+            <article><span>🎉</span><div><strong>The plan</strong><p>Come ready to celebrate, laugh, dance and make memories</p></div></article>
           </div>
         </div>
       </section>
 
      <footer className="party-footer">
-  <div>
-    <span className="brand-mark">🎉</span>
-    <strong>50 Kachoris</strong>
-  </div>
-  <p>Three friends · Fifty years · One unforgettable weekend</p>
-  <div className="footer-links">
-    <a href="#top">Back to top ↑</a>
-    <a href="/admin" aria-label="Admin login">🔒 Admin Login</a>
-  </div>
-</footer>
+        <div className="party-footer-main">
+          <p className="eyebrow">50 Kachoris</p>
+          <h2>Fifty years · One unforgettable weekend.</h2>
+          <p>Kenya · 24–26 October 2026</p>
+        </div>
+        <nav className="party-footer-nav" aria-label="Footer navigation">
+          <a href="#top">Welcome</a>
+          <a href="#weekend">The Weekend</a>
+          <a href="#galu">Lantana</a>
+          <a href="#rooms">Rooms</a>
+          <a href="#memories">Photos</a>
+        </nav>
+        <div className="party-footer-actions">
+          <a href="#top">Back to top ↑</a>
+          <a href="/admin" aria-label="Admin login">🔒 Admin Login</a>
+        </div>
+     </footer>
     </main>
   )
 }

@@ -66,7 +66,7 @@ export default function PartyRooming() {
             className="party-rooming-search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search a name or room…"
+            placeholder="Start typing your name or room…"
             aria-label="Search party rooming"
           />
           <button
@@ -74,10 +74,27 @@ export default function PartyRooming() {
             type="button"
             onClick={() => setShow((value) => !value)}
           >
-            {show ? 'Hide rooming list' : 'View rooming list'}
+            {show ? 'Hide all rooms' : 'View all rooms'}
           </button>
         </div>
       </div>
+
+      {!show && query.trim() && (
+        <div className="party-room-grid party-room-grid-result">
+          {filtered.map((room) => (
+            <div className="party-room party-room-result" key={room.room}>
+              <span className="party-room-result-label">Your room</span>
+              <strong>{room.room}</strong>
+              {room.guests.map((guest) => <span key={guest}>{guest}</span>)}
+              <span className="party-room-count">{room.guests.length} {room.guests.length === 1 ? 'guest' : 'guests'}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!show && query.trim() && filtered.length === 0 && (
+        <div className="party-room-search-empty">No room or guest found for “{query}”. Check the spelling and try again.</div>
+      )}
 
       {show && (
         <div className="party-room-grid">
