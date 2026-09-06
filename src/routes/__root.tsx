@@ -14,12 +14,20 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: '50 Kachoris in the wild | Taita Hills 2026',
-      },
-      {
-        name: 'description',
-        content: '50 Kachoris family safari itinerary, room plan and deposit tracker for Taita Hills, Kenya.',
-      },
+  title: 'The 50 Kachoris 2026 celebration',
+},
+{
+  name: 'description',
+  content: 'The 50 Kachoris 2026 celebration — Kenya, 24–30 October 2026.',
+},
+{
+  property: 'og:title',
+  content: 'The 50 Kachoris 2026 celebration',
+},
+{
+  property: 'og:description',
+  content: 'The 50 Kachoris 2026 celebration — Kenya, 24–30 October 2026.',
+},
       {
         name: 'theme-color',
         content: '#173f2a',
