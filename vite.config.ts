@@ -6,12 +6,17 @@ import tailwindcss from '@tailwindcss/vite'
 import netlify from '@netlify/vite-plugin-tanstack-start'
 
 const config = defineConfig({
+  server: {
+    watch: {
+      ignored: ['**/.omc/**'],
+    },
+  },
   plugins: [
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
     tailwindcss(),
-    netlify(),
+    netlify({ dev: { edgeFunctions: { enabled: false } } }),
     tanstackStart(),
     viteReact(),
   ],
