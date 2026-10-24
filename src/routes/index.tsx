@@ -199,9 +199,9 @@ const dayThemes = {
     image: '/assets/party/days/day-roots-wide.jpg',
     meals: [
       { label: 'Breakfast', time: 'TBC' },
-      { label: 'Lunch', time: 'TBC' },
+      { label: 'Lunch', time: '12:30pm – 2:30pm' },
       { label: 'Tea', time: 'TBC' },
-      { label: 'Dinner', time: 'TBC' },
+      { label: 'Dinner', time: '7:30pm' },
     ],
   },
   'The Rave': {
