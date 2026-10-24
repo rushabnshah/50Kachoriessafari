@@ -200,7 +200,7 @@ const dayThemes = {
     meals: [
       { label: 'Breakfast', time: 'TBC' },
       { label: 'Lunch', time: '12:30pm – 2:30pm' },
-      { label: 'Tea', time: 'TBC' },
+      { label: 'Tea', time: '4:00pm' },
       { label: 'Dinner', time: '7:30pm' },
     ],
   },
@@ -216,9 +216,9 @@ const dayThemes = {
     image: '/assets/party/days/day-rave-wide.jpg',
     meals: [
       { label: 'Breakfast', time: 'TBC' },
-      { label: 'Lunch', time: 'TBC' },
-      { label: 'Tea', time: 'TBC' },
-      { label: 'Dinner', time: 'TBC' },
+      { label: 'Lunch', time: '12:30pm – 2:30pm' },
+      { label: 'Tea', time: '4:00pm' },
+      { label: 'Dinner', time: '7:30pm' },
     ],
   },
   'The Wind Down': {
@@ -233,9 +233,9 @@ const dayThemes = {
     image: '/assets/party/days/day-bollywood-wide.jpg',
     meals: [
       { label: 'Breakfast', time: 'TBC' },
-      { label: 'Lunch', time: 'TBC' },
-      { label: 'Tea', time: 'TBC' },
-      { label: 'Dinner', time: 'TBC' },
+      { label: 'Lunch', time: '12:30pm – 2:30pm' },
+      { label: 'Tea', time: '4:00pm' },
+      { label: 'Dinner', time: '7:30pm' },
     ],
   },
 }
